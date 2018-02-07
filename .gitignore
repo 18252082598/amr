@@ -3,3 +3,7 @@
 /.classpath
 /.project
 
+/ssm/*.classpath
+/ssm/*.springBeans
+/ssm/.settings
+/ssm/target
