@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joymeter.dao.AdminMapper">
+		<resultMap id="BaseResultMap" type="com.joymeter.entity.Admin">
+		<id column="admin_id" property="admin_id" jdbcType="INTEGER" />
+
+		<result column="admin_name" property="admin_name" jdbcType="VARCHAR" />
+		<result column="admin_password" property="admin_password" jdbcType="VARCHAR" />
+	</resultMap>
+	<sql id="Base_Column_List">
+		admin_id,admin_name,admin_password
+	</sql>
+
+	<select id="getAdminByName" resultMap="BaseResultMap" parameterType="java.lang.String">
+		select <include refid="Base_Column_List" /> from admin
+		where admin_name = #{admin_name}
+	</select>
+
+</mapper>

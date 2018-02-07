@@ -1,0 +1,285 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joymeter.dao.WechatMapper" >
+  <resultMap id="BaseResultMap" type="com.joymeter.entity.Wechat" >
+    <id column="wechatId" property="wechatid" jdbcType="INTEGER" />
+    <result column="userId" property="userid" jdbcType="INTEGER" />
+    <result column="cjoyId" property="cjoyid" jdbcType="INTEGER" />
+    <result column="wechatName" property="wechatname" jdbcType="VARCHAR" />
+    <result column="appId" property="appid" jdbcType="VARCHAR" />
+    <result column="appSecret" property="appsecret" jdbcType="VARCHAR" />
+    <result column="mchId" property="mchid" jdbcType="VARCHAR" />
+    <result column="apikey" property="apikey" jdbcType="VARCHAR" />
+    <result column="token" property="token" jdbcType="VARCHAR" />
+    <result column="encondingASEKey" property="encondingasekey" jdbcType="VARCHAR" />
+    <result column="encodingStyle" property="encodingstyle" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="INTEGER" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="welcomemsg" property="welcomemsg" jdbcType="VARCHAR" />
+    <result column="notifyrecharge" property="notifyrecharge" jdbcType="VARCHAR" />
+    <result column="notifynomoney" property="notifynomoney" jdbcType="VARCHAR" />
+    <result column="reserved1" property="reserved1" jdbcType="VARCHAR" />
+    <result column="reserved2" property="reserved2" jdbcType="VARCHAR" />
+    <result column="reserved3" property="reserved3" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    wechatId, userId, cjoyId, wechatName, appId, appSecret, mchId, apikey, token, encondingASEKey, 
+    encodingStyle, status, createTime, welcomemsg, notifyrecharge, notifynomoney, reserved1, 
+    reserved2, reserved3
+  </sql>
+  
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from wechat_table
+    where wechatId = #{wechatid,jdbcType=INTEGER}
+  </select>
+  
+  
+  	<select id="getWechatByCjoyId" resultMap="BaseResultMap"
+		parameterType="java.lang.Integer">
+		select
+		<include refid="Base_Column_List" />
+		from wechat_table
+		where cjoyId = #{cjoyid,jdbcType=INTEGER}
+	</select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from wechat_table
+    where wechatId = #{wechatid,jdbcType=INTEGER}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.joymeter.entity.Wechat" >
+    insert into wechat_table (wechatId, userId, cjoyId, 
+      wechatName, appId, appSecret, 
+      mchId, apikey, token, 
+      encondingASEKey, encodingStyle, status, 
+      createTime, welcomemsg, notifyrecharge, 
+      notifynomoney, reserved1, reserved2, 
+      reserved3)
+    values (#{wechatid,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{cjoyid,jdbcType=INTEGER}, 
+      #{wechatname,jdbcType=VARCHAR}, #{appid,jdbcType=VARCHAR}, #{appsecret,jdbcType=VARCHAR}, 
+      #{mchid,jdbcType=VARCHAR}, #{apikey,jdbcType=VARCHAR}, #{token,jdbcType=VARCHAR}, 
+      #{encondingasekey,jdbcType=VARCHAR}, #{encodingstyle,jdbcType=VARCHAR}, #{status,jdbcType=INTEGER}, 
+      #{createtime,jdbcType=TIMESTAMP}, #{welcomemsg,jdbcType=VARCHAR}, #{notifyrecharge,jdbcType=VARCHAR}, 
+      #{notifynomoney,jdbcType=VARCHAR}, #{reserved1,jdbcType=VARCHAR}, #{reserved2,jdbcType=VARCHAR}, 
+      #{reserved3,jdbcType=VARCHAR})
+  </insert>
+  
+  
+  <insert id="insertSelective" parameterType="com.joymeter.entity.Wechat" >
+    insert into wechat_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+<!--       <if test="wechatid != null" > -->
+<!--         wechatId, -->
+<!--       </if> -->
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="cjoyid != null" >
+        cjoyId,
+      </if>
+      <if test="wechatname != null" >
+        wechatName,
+      </if>
+      <if test="appid != null" >
+        appId,
+      </if>
+      <if test="appsecret != null" >
+        appSecret,
+      </if>
+      <if test="mchid != null" >
+        mchId,
+      </if>
+      <if test="apikey != null" >
+        apikey,
+      </if>
+      <if test="token != null" >
+        token,
+      </if>
+      <if test="encondingasekey != null" >
+        encondingASEKey,
+      </if>
+      <if test="encodingstyle != null" >
+        encodingStyle,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="welcomemsg != null" >
+        welcomemsg,
+      </if>
+      <if test="notifyrecharge != null" >
+        notifyrecharge,
+      </if>
+      <if test="notifynomoney != null" >
+        notifynomoney,
+      </if>
+      <if test="reserved1 != null" >
+        reserved1,
+      </if>
+      <if test="reserved2 != null" >
+        reserved2,
+      </if>
+      <if test="reserved3 != null" >
+        reserved3,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+<!--       <if test="wechatid != null" > -->
+<!--         #{wechatid,jdbcType=INTEGER}, -->
+<!--       </if> -->
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="cjoyid != null" >
+        #{cjoyid,jdbcType=INTEGER},
+      </if>
+      <if test="wechatname != null" >
+        #{wechatname,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="appsecret != null" >
+        #{appsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="mchid != null" >
+        #{mchid,jdbcType=VARCHAR},
+      </if>
+      <if test="apikey != null" >
+        #{apikey,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null" >
+        #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="encondingasekey != null" >
+        #{encondingasekey,jdbcType=VARCHAR},
+      </if>
+      <if test="encodingstyle != null" >
+        #{encodingstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="welcomemsg != null" >
+        #{welcomemsg,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyrecharge != null" >
+        #{notifyrecharge,jdbcType=VARCHAR},
+      </if>
+      <if test="notifynomoney != null" >
+        #{notifynomoney,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null" >
+        #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null" >
+        #{reserved2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved3 != null" >
+        #{reserved3,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  
+  
+  
+  <update id="updateByPrimaryKeySelective" parameterType="com.joymeter.entity.Wechat" >
+    update wechat_table
+    <set >
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="cjoyid != null" >
+        cjoyId = #{cjoyid,jdbcType=INTEGER},
+      </if>
+      <if test="wechatname != null" >
+        wechatName = #{wechatname,jdbcType=VARCHAR},
+      </if>
+      <if test="appid != null" >
+        appId = #{appid,jdbcType=VARCHAR},
+      </if>
+      <if test="appsecret != null" >
+        appSecret = #{appsecret,jdbcType=VARCHAR},
+      </if>
+      <if test="mchid != null" >
+        mchId = #{mchid,jdbcType=VARCHAR},
+      </if>
+      <if test="apikey != null" >
+        apikey = #{apikey,jdbcType=VARCHAR},
+      </if>
+      <if test="token != null" >
+        token = #{token,jdbcType=VARCHAR},
+      </if>
+      <if test="encondingasekey != null" >
+        encondingASEKey = #{encondingasekey,jdbcType=VARCHAR},
+      </if>
+      <if test="encodingstyle != null" >
+        encodingStyle = #{encodingstyle,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=INTEGER},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="welcomemsg != null" >
+        welcomemsg = #{welcomemsg,jdbcType=VARCHAR},
+      </if>
+      <if test="notifyrecharge != null" >
+        notifyrecharge = #{notifyrecharge,jdbcType=VARCHAR},
+      </if>
+      <if test="notifynomoney != null" >
+        notifynomoney = #{notifynomoney,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null" >
+        reserved1 = #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null" >
+        reserved2 = #{reserved2,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved3 != null" >
+        reserved3 = #{reserved3,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where wechatId = #{wechatid,jdbcType=INTEGER}
+  </update>
+  
+   
+  <update id="updateByPrimaryKey" parameterType="com.joymeter.entity.Wechat" >
+    update wechat_table
+    set userId = #{userid,jdbcType=INTEGER},
+      cjoyId = #{cjoyid,jdbcType=INTEGER},
+      wechatName = #{wechatname,jdbcType=VARCHAR},
+      appId = #{appid,jdbcType=VARCHAR},
+      appSecret = #{appsecret,jdbcType=VARCHAR},
+      mchId = #{mchid,jdbcType=VARCHAR},
+      apikey = #{apikey,jdbcType=VARCHAR},
+      token = #{token,jdbcType=VARCHAR},
+      encondingASEKey = #{encondingasekey,jdbcType=VARCHAR},
+      encodingStyle = #{encodingstyle,jdbcType=VARCHAR},
+      status = #{status,jdbcType=INTEGER},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      welcomemsg = #{welcomemsg,jdbcType=VARCHAR},
+      notifyrecharge = #{notifyrecharge,jdbcType=VARCHAR},
+      notifynomoney = #{notifynomoney,jdbcType=VARCHAR},
+      reserved1 = #{reserved1,jdbcType=VARCHAR},
+      reserved2 = #{reserved2,jdbcType=VARCHAR},
+      reserved3 = #{reserved3,jdbcType=VARCHAR}
+    where wechatId = #{wechatid,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllWechat" resultMap="BaseResultMap">
+  	select * from wechat_table
+  </select>
+</mapper>

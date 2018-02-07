@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.joymeter.dao.CjoyMapper" >
+  <resultMap id="BaseResultMap" type="com.joymeter.entity.Cjoy" >
+    <id column="cjoyId" property="cjoyid" jdbcType="INTEGER" />
+    <result column="cjoyName" property="cjoyname" jdbcType="VARCHAR" />
+    <result column="createTime" property="createtime" jdbcType="TIMESTAMP" />
+    <result column="paykey" property="paykey" jdbcType="VARCHAR" />
+    <result column="payscret" property="payscret" jdbcType="VARCHAR" />
+    <result column="cjoyPath" property="cjoypath" jdbcType="VARCHAR" />
+    <result column="findUser" property="finduser" jdbcType="VARCHAR" />
+    <result column="findEnergy" property="findenergy" jdbcType="VARCHAR" />
+    <result column="findData" property="finddata" jdbcType="VARCHAR" />
+    <result column="payUrl" property="payurl" jdbcType="VARCHAR" />
+    <result column="reserved1" property="reserved1" jdbcType="VARCHAR" />
+    <result column="reserved2" property="reserved2" jdbcType="CHAR" />
+    <result column="reserved3" property="reserved3" jdbcType="CHAR" />
+    <result column="reserved4" property="reserved4" jdbcType="CHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cjoyId, cjoyName, createTime, paykey, payscret, cjoyPath, findUser, findEnergy, findData, 
+    payUrl, reserved1, reserved2, reserved3, reserved4
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cjoy_table
+    where cjoyId = #{cjoyid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cjoy_table
+    where cjoyId = #{cjoyid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="com.joymeter.entity.Cjoy" >
+    insert into cjoy_table (cjoyId, cjoyName, createTime, 
+      paykey, payscret, cjoyPath, 
+      findUser, findEnergy, findData, 
+      payUrl, reserved1, reserved2, 
+      reserved3, reserved4)
+    values (#{cjoyid,jdbcType=INTEGER}, #{cjoyname,jdbcType=VARCHAR}, #{createtime,jdbcType=TIMESTAMP}, 
+      #{paykey,jdbcType=VARCHAR}, #{payscret,jdbcType=VARCHAR}, #{cjoypath,jdbcType=VARCHAR}, 
+      #{finduser,jdbcType=VARCHAR}, #{findenergy,jdbcType=VARCHAR}, #{finddata,jdbcType=VARCHAR}, 
+      #{payurl,jdbcType=VARCHAR}, #{reserved1,jdbcType=VARCHAR}, #{reserved2,jdbcType=CHAR}, 
+      #{reserved3,jdbcType=CHAR}, #{reserved4,jdbcType=CHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.joymeter.entity.Cjoy" >
+    insert into cjoy_table
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+<!--       <if test="cjoyid != null" > -->
+<!--         cjoyId, -->
+<!--       </if> -->
+      <if test="cjoyname != null" >
+        cjoyName,
+      </if>
+      <if test="createtime != null" >
+        createTime,
+      </if>
+      <if test="paykey != null" >
+        paykey,
+      </if>
+      <if test="payscret != null" >
+        payscret,
+      </if>
+      <if test="cjoypath != null" >
+        cjoyPath,
+      </if>
+      <if test="finduser != null" >
+        findUser,
+      </if>
+      <if test="findenergy != null" >
+        findEnergy,
+      </if>
+      <if test="finddata != null" >
+        findData,
+      </if>
+      <if test="payurl != null" >
+        payUrl,
+      </if>
+      <if test="reserved1 != null" >
+        reserved1,
+      </if>
+      <if test="reserved2 != null" >
+        reserved2,
+      </if>
+      <if test="reserved3 != null" >
+        reserved3,
+      </if>
+      <if test="reserved4 != null" >
+        reserved4,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+<!--       <if test="cjoyid != null" > -->
+<!--         #{cjoyid,jdbcType=INTEGER}, -->
+<!--       </if> -->
+      <if test="cjoyname != null" >
+        #{cjoyname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paykey != null" >
+        #{paykey,jdbcType=VARCHAR},
+      </if>
+      <if test="payscret != null" >
+        #{payscret,jdbcType=VARCHAR},
+      </if>
+      <if test="cjoypath != null" >
+        #{cjoypath,jdbcType=VARCHAR},
+      </if>
+      <if test="finduser != null" >
+        #{finduser,jdbcType=VARCHAR},
+      </if>
+      <if test="findenergy != null" >
+        #{findenergy,jdbcType=VARCHAR},
+      </if>
+      <if test="finddata != null" >
+        #{finddata,jdbcType=VARCHAR},
+      </if>
+      <if test="payurl != null" >
+        #{payurl,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null" >
+        #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null" >
+        #{reserved2,jdbcType=CHAR},
+      </if>
+      <if test="reserved3 != null" >
+        #{reserved3,jdbcType=CHAR},
+      </if>
+      <if test="reserved4 != null" >
+        #{reserved4,jdbcType=CHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.joymeter.entity.Cjoy" >
+    update cjoy_table
+    <set >
+      <if test="cjoyname != null" >
+        cjoyName = #{cjoyname,jdbcType=VARCHAR},
+      </if>
+      <if test="createtime != null" >
+        createTime = #{createtime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="paykey != null" >
+        paykey = #{paykey,jdbcType=VARCHAR},
+      </if>
+      <if test="payscret != null" >
+        payscret = #{payscret,jdbcType=VARCHAR},
+      </if>
+      <if test="cjoypath != null" >
+        cjoyPath = #{cjoypath,jdbcType=VARCHAR},
+      </if>
+      <if test="finduser != null" >
+        findUser = #{finduser,jdbcType=VARCHAR},
+      </if>
+      <if test="findenergy != null" >
+        findEnergy = #{findenergy,jdbcType=VARCHAR},
+      </if>
+      <if test="finddata != null" >
+        findData = #{finddata,jdbcType=VARCHAR},
+      </if>
+      <if test="payurl != null" >
+        payUrl = #{payurl,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved1 != null" >
+        reserved1 = #{reserved1,jdbcType=VARCHAR},
+      </if>
+      <if test="reserved2 != null" >
+        reserved2 = #{reserved2,jdbcType=CHAR},
+      </if>
+      <if test="reserved3 != null" >
+        reserved3 = #{reserved3,jdbcType=CHAR},
+      </if>
+      <if test="reserved4 != null" >
+        reserved4 = #{reserved4,jdbcType=CHAR},
+      </if>
+    </set>
+    where cjoyId = #{cjoyid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.joymeter.entity.Cjoy" >
+    update cjoy_table
+    set cjoyName = #{cjoyname,jdbcType=VARCHAR},
+      createTime = #{createtime,jdbcType=TIMESTAMP},
+      paykey = #{paykey,jdbcType=VARCHAR},
+      payscret = #{payscret,jdbcType=VARCHAR},
+      cjoyPath = #{cjoypath,jdbcType=VARCHAR},
+      findUser = #{finduser,jdbcType=VARCHAR},
+      findEnergy = #{findenergy,jdbcType=VARCHAR},
+      findData = #{finddata,jdbcType=VARCHAR},
+      payUrl = #{payurl,jdbcType=VARCHAR},
+      reserved1 = #{reserved1,jdbcType=VARCHAR},
+      reserved2 = #{reserved2,jdbcType=CHAR},
+      reserved3 = #{reserved3,jdbcType=CHAR},
+      reserved4 = #{reserved4,jdbcType=CHAR}
+    where cjoyId = #{cjoyid,jdbcType=INTEGER}
+  </update>
+  
+  <select id="getAllCjoy" parameterMap="BaseResultMap">
+  		select * from cjoy_table
+  </select>
+  
+</mapper>
