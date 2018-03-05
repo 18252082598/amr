@@ -17,7 +17,13 @@
 			expression="org.springframework.stereotype.Controller" />
 	</context:component-scan>
 	<!-- 配置静态资源，直接映射到对应的文件夹，不被DispatcherServlet处理，3.04新增功能，需要重新设置spring-mvc-3.0.xsd -->
-
+	
+	<mvc:resources mapping="/bootstrap/css/**" location="/bootstrap/css/"/>
+	<mvc:resources mapping="/bootstrap/html/**" location="/bootstrap/html/"/>
+	<mvc:resources mapping="/bootstrap/images/**" location="/bootstrap/images/"/>
+	<mvc:resources mapping="/bootstrap/js/**" location="/bootstrap/js/"/>
+	<mvc:resources mapping="/bootstrap/jsp/**" location="/bootstrap/jsp/"/>
+	<mvc:resources mapping="/bootstrap/plugins/**" location="/bootstrap/plugins/"/>
 	
 	<mvc:resources mapping="/wechat_web/Assets/css/**" location="/wechat_web/Assets/css/"/>
 	<mvc:resources mapping="/wechat_web/Assets/images/**" location="/wechat_web/Assets/images/"/>
