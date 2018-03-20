@@ -1,4 +1,4 @@
-package com.joymeter.information;
+package com.joymeter.IOSource;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
