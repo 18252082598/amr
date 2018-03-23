@@ -8,7 +8,7 @@
     </appender> 
     <!-- Mybatis and SQL 日志输出至文件 -->  
     <appender name="fileAppender" class="org.apache.log4j.RollingFileAppender">
-        <param name="File" value="${catalina.home}/logs/amr/common-default.log" />
+        <param name="File" value="${catalina.home}/logs/amrTest/common-default.log" />
         <param name="Append" value="true" />
         <param name="Encoding" value="UTF-8" /> 
         <param name="maxFileSize" value="10MB" />
