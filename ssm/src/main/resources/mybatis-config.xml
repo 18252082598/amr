@@ -3,6 +3,6 @@
 <configuration>
     <settings>
         <!--       <setting name="cacheEnabled" value="true" /> -->
-        <setting name="defaultExecutorType" value="REUSE"/>s
+        <setting name="defaultExecutorType" value="REUSE"/>
     </settings>
 </configuration>
