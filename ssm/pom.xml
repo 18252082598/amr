@@ -5,7 +5,7 @@
 	<artifactId>ssm</artifactId>
 	<packaging>war</packaging>
 	<version>1.0.0</version>
-	<name>amr</name>
+	<name>SmartMeter</name>
 
 
 	<properties>
