@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>$reminder_list_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <!--[if lt IE 9]>
+              <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+              <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+        <script src="../js/cookie_util.js"></script>
+        <script src="access.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="logout.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="query_option.js"></script>
+        <script src="util.js"></script>
+        <script src="remind-list.js"></script>
+    </head>
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt="$navigation_010">
+                    <ul>
+                        <li id="welcome"><p>
+                                $navigation_001<span id="admin"></span>
+                            </p>
+                        </li>
+                        <li id="to-do">
+                            <a href="$navigation_href_001">
+                                <p>
+                                    $navigation_002<span id="sum-to-do"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li id="exit"><p>$navigation_003</p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mainmenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li><a href="$navigation_href_002">$navigation_004</a>
+                        </li>
+                        <li class="active"><a href="$navigation_href_003"><span>$navigation_005</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span></a>
+                        </li>
+                        <li><a href="$navigation_href_004"><span>$navigation_006</span>
+                            </a>
+                        </li>
+                        <li><a href="$navigation_href_005"><span>$navigation_007</span>
+                            </a>
+                        </li>
+                        <li><a href="$navigation_href_006"><span>$navigation_008</span>
+                            </a>
+                        </li>
+                        <li><a href="$navigation_href_007"><span>$navigation_009</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li><a href="$navigation_href_003">$remote_read_002</a>
+                        </li>
+                        <li><a href="$navigation_href_011">$remote_read_003</a>
+                        </li>
+                        <li><a href="$navigation_href_025">$share_billing_001</a>
+                        </li>   
+                        <li class="active"><a href="$navigation_href_008">$remote_read_005</a>
+                        </li>
+                        <li><a href="$navigation_href_012">$remote_read_006</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--中间主体部分 -->
+            <div class="main" id="reminder-list-div1">
+                <!--上部分 -->
+                <div class="nav">
+                    <ul>
+                        <li class="tab-main">$reminder_list_002</li>
+                    </ul>
+                </div>
+                <div class="big-list">
+                    <!--表格查询部分 -->
+                    <div class="row-search  form-inline">
+                        <div  class="form-group">
+                            <label>$public_001</label>
+                            <input id="user_name" type="text" name="用户名称">
+                            <label>$public_002</label>
+                            <select id="user_address_community" name="小区" onchange="findAllBuildings()">
+                            </select> 
+                            <select id="user_address_building" name="楼栋" onchange="findAllUnits()">
+                            </select>
+                            <select id="user_address_unit" onchange="findAllRoomsInUser()">
+                                <option value="" selected="selected"></option>
+                            </select>
+                            <select id="user_address_room">
+                                <option value="" selected="selected"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <!--<span>$public_028</span>--> 
+                            <select id="operator_name" name="操作员">
+                            </select> 
+                            <label>$public_004</label>
+                            <input id="meter_no" type="text" name="表出厂编号" >
+                            <button id="search" class="button white" type="submit">
+                                <span class="search">$public_005</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!--列表主题部分 -->
+                    <div class="list  table-responsive">
+                        <table id="t1" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="page" colspan="22">
+                                        <form>
+                                            $public_006<select class="pageSize" onchange="change(this.options[this.selectedIndex].value)">
+                                                <option value="5">5</option>
+                                                <option value="10" selected="selected">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                            </select> <span style="cursor:pointer" class="glyphicon glyphicon-step-backward span3"></span> <span
+                                                class="triangle-left span2" style="cursor:pointer"></span>&nbsp;$public_008<input class="input-page"
+                                                value="1" name="">$public_009&nbsp;<span style="cursor:pointer" class="triangle-right span1"></span>
+                                            <span style="cursor:pointer" class="glyphicon glyphicon-step-forward span4"></span>
+                                            $public_010<span><b>10</b></span>$public_009
+                                        </form></th>
+                                </tr>
+                                <tr class="table-th">
+                                    <th><input type="checkbox"  class="checkAll"></th>
+                                    <th>$reminder_list_003</th>
+                                    <th>$public_001</th>
+                                    <th>$public_016</th>
+                                    <th>$public_017</th>
+                                    <th>$public_018</th>
+                                    <th>$public_019</th>
+                                    <th>$public_020</th>
+                                    <th>$public_021</th>
+                                    <th>$public_004</th>
+                                    <th>$public_022</th>
+                                    <th>$public_023</th>
+                                    <th>$public_028</th>
+                                    <th>$reminder_list_004</th>
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="22">
+                                        <input type="checkbox"  class="checkAll">$reminder_list_005
+                                        <button id="markup" class="button blue first-button" type="button">
+                                            <span class="glyphicon glyphicon-flag"></span>$reminder_list_006
+                                        </button>
+                                        <button id="cancelMarkup" class="button white" type="button">
+                                            $reminder_list_007
+                                        </button>
+                                        <button class="button white" type="button" id="import-remind"
+                                                onClick="">$public_030</button> <span>$public_031&nbsp;<span id="totalNo" class="totalNo"></span>&nbsp;$public_032</span>
+                                        <form>
+                                            $public_006<select class="pageSize" onchange="change(this.options[this.selectedIndex].value)">
+                                                <option value="5">5</option>
+                                                <option value="10" selected="selected">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                            </select> <span style="cursor:pointer" class="glyphicon glyphicon-step-backward span3"></span> <span
+                                                class="triangle-left span2" style="cursor:pointer"></span>&nbsp;$public_008<input class="input-page"
+                                                value="1" name="">$public_009&nbsp;<span style="cursor:pointer" class="triangle-right span1"></span>
+                                            <span class="glyphicon glyphicon-step-forward span4" style="cursor:pointer"></span>
+                                            $public_010<span><b>10</b></span>$public_009
+                                        </form>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                                <tr></tr>													
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="access"  id="prompt_box">
+                     <div>
+                            <p id="reminder-list-access"></p>
+                     </div>
+             </div>-->
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('.checkAll').click(function () {
+                    $('input[type=checkbox]').prop("checked", $(this).prop('checked'));
+                });
+            });
+        </script>
+    </body>
+</html>

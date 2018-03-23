@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>$administrator_manage_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>	
+        <!--<script type="text/javascript" src="../js/jsAddress.js"></script>-->
+        <script src="../js/cookie_util.js"></script>
+        <script src="logout.js"></script>
+        <script src="access.js"></script>
+        <script src="findSysLog.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="util.js"></script>
+        <script src="admin-manage.js"></script>
+        <script  type="text/JavaScript" src="../js/jquery.validate.js"></script>
+        <script  type="text/JavaScript" src="../js/jquery.metadata.js"></script>
+        <!--[if lt IE 9]>
+        <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]--->
+        <script src="../js/sum-to-do.js"></script>	
+    </head>
+
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt=$navigation_010>
+                    <ul>
+                        <li id="welcome">
+                            <p>
+                                $navigation_001
+                                <span id="admin"></span>
+                            </p>
+                        </li>
+                        <li id="to-do">
+                            <a href=$navigation_href_001>
+                                <p>
+                                    $navigation_002
+                                    <span id="sum-to-do"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li id="exit">
+                            <p>
+                                $navigation_003
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mainmenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href=$navigation_href_002>$navigation_004</a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_003><span>$navigation_005</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span> </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_004><span>$navigation_006</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_005><span>$navigation_007</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_006><span>$navigation_008</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href=$navigation_href_007><span>$navigation_009</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li class="active">
+                            <a href=$navigation_href_007>$administrator_manage_002</a>
+                        </li>
+                        <li>
+                            <a  href=$navigation_href_018>$administrator_manage_003</a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_019>$administrator_manage_004</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <!--中间主体部分 -->
+            <div class="main"  id="adminstrator-manage-div1">
+                <!--上部分 -->
+                <div id="myTab" class="nav">
+                    <ul>
+                        <li class="tab-main">
+                            $administrator_manage_006
+                        </li>
+                        <li class="tab-sub">
+                            <a id="regist_show" data-toggle="modal" href="#administrator-add">$administrator_manage_007</a>
+                        </li>
+
+                    </ul>
+                </div>
+                <div id="myTabContent" class="big-list">
+
+                    <!--列表主题部分 -->
+                    <!--<div class="tab-pane fade in active" id="tab-administrator-list">-->
+                    <div class="list table-responsive" id="administrator-manage-div1">
+                        <table class="table table-hover" id="t1">
+                            <thead>
+                                <tr>
+                                    <th class="page" colspan="18">
+                                        <form>
+                                            $administrator_manage_008
+                                            <select class="pageSize" onchange="change(this.options[this.selectedIndex].value)">
+                                                <option value="5" selected="selected">
+                                                    5
+                                                </option>
+                                                <option value="10">
+                                                    10
+                                                </option>
+                                                <option value="15">
+                                                    15
+                                                </option>
+                                                <option value="20">
+                                                    20
+                                                </option>
+                                                <option value="30">
+                                                    30
+                                                </option>
+                                                <option value="50">
+                                                    50
+                                                </option>
+                                            </select>
+                                            <span style="cursor: pointer" class="glyphicon glyphicon-step-backward span3"></span>
+                                            <span style="cursor: pointer" class="triangle-left span2"></span> 
+                                            $public_008<input id="pageIndex" class="input-page" value="1" name="">$public_009
+                                            <span style="cursor: pointer" class="triangle-right span1"></span>
+                                            <span style="cursor: pointer" class="glyphicon glyphicon-step-forward span4"></span>
+                                            $administrator_manage_012<span><b></b></span>$public_009
+                                        </form>
+                                    </th>
+                                </tr>
+                                <tr class="table-th">
+                                    <th>
+                                        $administrator_manage_013
+                                    </th>
+                                    <th>
+                                        $administrator_manage_014
+                                    </th>
+                                    <th>
+                                        $administrator_manage_015
+                                    </th>
+                                    <th>
+                                        $administrator_manage_016
+                                    </th>
+                                    <th>
+                                        $administrator_manage_017
+                                    </th>
+                                    <th>
+                                        $administrator_manage_018
+                                    </th>
+                                    <th>
+                                        $administrator_manage_019
+                                    </th>
+                                    <th>
+                                        $administrator_manage_020
+                                    </th>
+                                    <th>
+                                        $administrator_manage_021
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="22" class="" >
+                                        <span class="sph">$administrator_manage_022&nbsp;<span id="totalNo" class="totalNo"></span>&nbsp;$administrator_manage_023</span>
+                                        <!--翻页---->
+                                        <form >
+                                            $administrator_manage_008<select class="pageSize" onchange="change(this.options[this.selectedIndex].value)">
+                                                <option value="5" selected="selected">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                            <span style="cursor: pointer" class="glyphicon glyphicon-step-backward span3"></span>
+                                            <span style="cursor: pointer" class="triangle-left span2"></span>                                         
+                                            $public_008<input class="input-page" name="" value="1">$public_009
+                                            <span style="cursor: pointer" class="triangle-right span1"></span>
+                                            <span style="cursor: pointer" class="glyphicon glyphicon-step-forward span4"></span>
+                                            $administrator_manage_012<span><b></b></span>$public_009
+                                        </form>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+                <!--</div>-->
+
+                <!--下部分 -->
+                <div class="detail-log"  id="administrator-manage-div2">
+                    <div id="rectangle">
+                        <div id="triangle-down">
+                        </div>
+                    </div>
+                    <div class="nav">
+                        <ul>
+                            <li class="tab-main">$administrator_manage_024</li>
+                        </ul>
+                    </div>
+                    <div class="small-list table-responsive">
+                        <table class="table" id="t2">
+                            <thead>
+                                <tr>
+                                    <th class="page" colspan="3">
+                                        <form>
+                                            $administrator_manage_008
+                                            <select class="pageLogSize" onchange="findSysLog()">
+                                                <option value="5" selected="selected">
+                                                    5
+                                                </option>
+                                                <option value="10">
+                                                    10
+                                                </option>
+                                                <option value="15">
+                                                    15
+                                                </option>
+                                                <option value="20">
+                                                    20
+                                                </option>
+                                                <option value="30">
+                                                    30
+                                                </option>
+                                                <option value="50">
+                                                    50
+                                                </option>
+                                            </select>
+                                            <span style="cursor: pointer" class="glyphicon glyphicon-step-backward span7"></span>
+                                            <span style="cursor: pointer" class="triangle-left span6"></span>
+                                            $administrator_manage_010<input id="pageLogIndex" class="input-page" value="1" name="">$public_009
+                                            <span style="cursor: pointer" class="triangle-right span5"></span>
+                                            <span style="cursor: pointer" class="glyphicon glyphicon-step-forward span8"></span>
+                                            $administrator_manage_012<span><b></b></span>$public_009
+                                        </form>
+                                    </th>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        $administrator_manage_025
+                                    </th>
+                                    <th  id="operator">
+                                        $administrator_manage_026
+                                    </th>
+                                    <th>
+                                        $administrator_manage_027
+                                    </th>
+                                </tr>
+
+                            </thead>
+                            <tbody>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>    
+            </div>
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+        <!--添加操作员-->
+        <div   class="modal fade"  id="administrator-add" tabindex="-1" role="dialog"
+               aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div  class="modal-content">
+                    <div class="modal-header">
+                        <button id="close_add" type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">&times;
+                        </button>
+                        <h5  class="modal-title">$administrator_manage_029</h5>
+                    </div>
+                    <form class="form-horizontal" role="form">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_014
+                                </label>
+                                <input class="form-control-inline" type="text" id="admin-account2" value="" name="firstname">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3  control-label">
+                                    $administrator_manage_015
+                                </label>
+                                <input class="form-control-inline" type="text" id="admin-name2"  name="chname">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3  control-label">
+                                    $administrator_manage_016
+                                </label>
+                                <input class="form-control-inline" type="text" id="admin-tel2"  name="tel" >
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3  control-label">
+                                    $administrator_manage_030
+                                </label>
+                                <select class="form-control-inline" id="admin-location-name2"  name="loca">
+                                    <option></option>
+                                    <option selected></option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_031
+                                </label>
+                                <input class="form-control-inline" type="password" id="admin-password2" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_032
+                                </label>
+                                <input class="form-control-inline" type="password" id="confirm-admin-password2"  name="confirm_password">
+                            </div>
+                            <div  class="form-group  form-inline">
+                                <label  class="col-xs-3 control-label">$administrator_manage_033</label>
+                                <!--<input  class="" type="text"  id=""  name="">--->
+                                <select  class="roleOption  form-control-inline" id="admin-role2"  name="quanx">
+                                </select>
+                            </div>
+                            <div  class="form-group">
+                                <label  class="col-xs-3 control-label">$administrator_manage_034</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions2" id="inlineRadio1" value="1" checked>$administrator_manage_035
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions2" id="inlineRadio2" value="0">$administrator_manage_036
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer" >
+                            <button class="button blue" type="submit" id="adminRegist">
+                                $administrator_manage_037
+                            </button>
+                            <button class="button white" type="button" id="adminReset" data-dismiss="modal">
+                                $administrator_manage_038
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!--修改操作员-->
+        <div  class="modal fade"  id="edit-userinfo" tabindex="-1" role="dialog"
+              aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div  class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="close_modify" type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">&times;
+                        </button>
+                        <h5  class="modal-title">$administrator_manage_039</h5>
+                    </div>
+
+                    <form class="form-horizontal" role="form">
+                        <div  class="modal-body">
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label" for="admin-account3">
+                                    $administrator_manage_014
+                                </label>
+                                <input class="modifyAdmin form-control-inline" type="text" id="admin-account3" name="firstname"  readonly>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_015
+                                </label>
+                                <input class="modifyAdmin  form-control-inline" type="text" id="admin-name3" name="chname">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_016
+                                </label>
+                                <input class="modifyAdmin  form-control-inline" type="text" id="admin-tel3"  name="tel">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_030
+                                </label>
+                                <select class="modifyAdmin  form-control-inline" id="admin-location-name3" name="loca">
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_031
+                                </label>
+                                <input class="modifyAdmin  form-control-inline" type="password" id="admin-password3" name="password">
+                            </div>
+                            <div class="form-group">
+                                <label class="col-xs-3 control-label">
+                                    $administrator_manage_032
+                                </label>
+                                <input class="modifyAdmin  form-control-inline" type="password" id="confirm-admin-password3" name="confirm_password">
+                            </div>
+                            <div  class="form-group  form-inline">
+                                <label  class="col-xs-3 control-label">$administrator_manage_033</label>
+                                <!--<input  class="" type="text"  id=""  name="">--->
+                                <select  class="roleOption  form-control-inline" id="admin-role3"  name="quanx">
+
+                                </select>
+                            </div>
+                            <div  class="form-group">
+                                <label  class="col-xs-3 control-label">$administrator_manage_034</label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions3" id="inlineRadio3" value="1" >$administrator_manage_035
+                                </label>
+                                <label class="radio-inline">
+                                    <input type="radio" name="inlineRadioOptions3" id="inlineRadio4" value="0">$administrator_manage_036
+                                </label>
+                            </div>
+                        </div>
+                        <div class="modal-footer" >
+                            <button class="button blue" type="submit" id="adminModify">
+                                $administrator_manage_037
+                            </button>
+                            <button class="button white" type="button" id="modifyAdminReset"  data-dismiss="modal">
+                                $administrator_manage_038
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                /*******为修改按钮绑定处理函数**********/
+                $('tbody').on('click', '.glyphicon-pencil', function () {
+                    $("#edit-userinfo").modal();
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                jQuery.validator.addMethod("telnom", function (value, element) {
+                    var tel = /^[0-9-_]{1,20}$/;
+                    return this.optional(element) || (tel.test(value));
+                }, "$administrator_manage_043");
+                $("#administrator-add").on("hidden.bs.modal", function () {
+                    $("#administrator-add form  input").next().remove();
+                    $("#administrator-add form  select").next().remove();
+                });
+                jQuery.validator.addMethod("selectNone", function (value, element) {
+                    return value != "";
+                }, "$administrator_manage_056");
+                $("#administrator-add form").validate({
+                    success: function (label) {
+                        label.text('').addClass('valid');
+                    },
+                    onkeyup: false,
+                    focusCleanup: true,
+                    focusInvalid: false,
+                    invalidHandler: function (form, validator) {
+                        alert('$administrator_manage_058');
+                        return false;
+                    },
+                    submitHandler: function (form) {
+                        regist_admin();
+                    },
+                    rules: {
+                        firstname: {
+                            required: true,
+                        },
+                        chname: {
+                            required: true,
+                            maxlength: 50
+                        },
+                        tel: {
+                            required: true,
+                            telnom: true
+                        },
+                        password: {
+                            required: true,
+                            minlength: 6
+                        },
+                        confirm_password: {
+                            required: true,
+                            minlength: 6,
+                            equalTo: "#admin-password2"
+                        },
+                        loca: {
+                            //required:true,
+                            selectNone: true
+                        },
+                        quanx: {
+                            required: true,
+                            //selectNone2:true
+                        }
+                    },
+                    messages: {
+                        firstname: {
+                            required: "$administrator_manage_046"
+                                    //minlength:jQuery.format("$administrator_manage_047")
+                        },
+                        chname: {
+                            required: "$administrator_manage_048",
+                            maxlength: jQuery.validator.format("$administrator_manage_049")
+                        },
+                        tel: {
+                            required: "$administrator_manage_050"
+                        },
+                        password: {
+                            required: "$administrator_manage_051",
+                            minlength: jQuery.format("$administrator_manage_052")
+                        },
+                        confirm_password: {
+                            required: "$administrator_manage_053",
+                            minlength: "$administrator_manage_054",
+                            equalTo: "$administrator_manage_055"
+                        },
+                        quanx: {
+                            required: "$administrator_manage_045"
+                        }
+                    }
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#edit-userinfo").on("hidden.bs.modal", function () {
+                    $("#edit-userinfo form  input").next().remove();
+                    $("#edit-userinfo form  select").next().remove();
+                });
+                $("#edit-userinfo form").validate({
+                    success: function (label) {
+                        label.text('').addClass('valid');
+                    },
+                    onfocusout: function (element) {
+                        this.element(element);
+                    },
+                    onkeyup: false,
+                    focusCleanup: true,
+                    focusInvalid: false,
+                    invalidHandler: function (form, validator) {
+                        alert('$administrator_manage_058');
+                        return false;
+                    },
+                    submitHandler: function (form) {
+                        cofirm_modify_admin();
+                    },
+                    rules: {
+                        chname: {
+                            required: true,
+                            //ch_name:true,
+                            maxlength: 50
+                        },
+                        tel: {
+                            required: true,
+                            telnom: true
+                        },
+                        password: {
+                            required: true,
+                            minlength: 6
+                        },
+                        confirm_password: {
+                            required: true,
+                            minlength: 6,
+                            equalTo: "#admin-password3"
+                        },
+                        loca: {
+                            // required:true,
+                            selectNone: true
+                        },
+                        quanx: {
+                            required: true,
+                            //selectNone2:true
+                        }
+                    },
+                    messages: {
+                        chname: {
+                            required: "$administrator_manage_048",
+                            maxlength: jQuery.validator.format("$administrator_manage_049")
+                        },
+                        tel: {
+                            required: "$administrator_manage_050"
+                        },
+                        password: {
+                            required: "$administrator_manage_051",
+                            minlength: jQuery.format("$administrator_manage_052")
+                        },
+                        confirm_password: {
+                            required: "$administrator_manage_053",
+                            minlength: "$administrator_manage_054",
+                            equalTo: "$administrator_manage_055"
+                        },
+                        quanx: {
+                            required: "$administrator_manage_045"
+                        }
+                    }
+                });
+            });
+        </script>
+    </body>
+</html>

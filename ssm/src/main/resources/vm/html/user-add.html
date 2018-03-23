@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>$user_add_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <!--[if lt IE 9]>
+        <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="$importJS_025"></script>
+        <script src="../js/cookie_util.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="logout.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="user-add.js"></script>
+        <script  src="form-validation.js"></script>
+    </head>
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt="$navigation_010">
+                    <ul>
+                        <li id="welcome">
+                            <p>
+                                $navigation_001
+                                <span id="admin"></span>
+                            </p>
+                        </li>
+                        <li id="to-do">
+                            <a href="$navigation_href_001">
+                                <p>
+                                    $navigation_002
+                                    <span id="sum-to-do"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li id="exit">
+                            <p>
+                                $navigation_003
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mainmenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href="$navigation_href_002">$navigation_004</a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_003"><span>$navigation_005</span> </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span></a>
+                        </li>
+                        <li class="active">
+                            <a href="$navigation_href_004"><span>$navigation_006</span> </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_005"><span>$navigation_007</span> </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_006"><span>$navigation_008</span> </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_007"><span>$navigation_009</span> </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href="$navigation_href_004">$navigation_006</a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_013">$user_add_002</a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_014">$user_add_003</a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_012">$user_add_004</a>
+                        </li>
+                        <li class="active">
+                            <a href="$navigation_href_009">$user_add_005</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="register-box">
+                <div class="modal-body"  id="tab-register">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <label for="user-name2" class="col-sm-2 control-label">
+                                $public_001
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-inline  required" id="user-name2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">
+                                $public_002
+                            </label>
+                            <div class="col-sm-10" id="d2">
+                                <select class="form-control-inline  select_add1"  id="add1"></select>
+                                <select class="form-control-inline  select_add2"  id="add2"></select>
+                                <select class="form-control-inline  select_add3"  id="add3" onchange="findCommunities();"></select>
+                                <select id="community" onchange="findBuildings()" class="form-control-inline  sel_hide  sel1">
+                                    <option value="">$public_016</option>
+                                </select>
+                                <select id="building" onchange="findUnits()" class="form-control-inline  sel_hide sel2">
+                                    <option value="">$public_017</option>
+                                </select>
+                                <select id="unit" onchange="findConcentrators()" class="form-control-inline  sel_hide sel2">
+                                    <option value="">$public_018</option>
+                                </select>
+                                <input type="text" class="form-control-inline  required" id="user-room2" placeholder="$user_add_016" >
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="mbus-name2" class="col-sm-2 control-label">
+                                $public_021
+                            </label>
+                            <div class="col-sm-10">
+                                <select class="form-control-inline required  sel_hide" id="mbus-name2">
+                                    <option>
+                                        $user_manage_058
+                                    </option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="location-name2" class="col-sm-2 control-label">
+                                $user_add_006
+                            </label>
+                            <div class="col-sm-10">
+                                <select class="form-control-inline required  sel_hide" id="location-name2"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-mobile2" class="col-sm-2 control-label">
+                                $user_add_007
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-inline  required"
+                                       id="user-mobile2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="user-cardID2" class="col-sm-2 control-label">
+                                $user_add_008
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-inline required"
+                                       id="user-cardID2">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meter-type2" class="col-sm-2 control-label">
+                                $user_add_009
+                            </label>
+                            <div class="col-sm-10">
+                                <select class="form-control-inline  sel_hide" id="meter-type2">
+                                    <option value="">$user_add_009</option>
+                                    <option value="10">$user_add_017</option>
+                                    <option value="11">$user_add_017_2</option>
+                                    <option value="20">$user_add_018</option>
+                                    <option value="30">$remote_read_047_1</option>
+                                    <option value="40">$remote_read_047_2</option>
+                                </select>
+                                <select class="form-control-inline  sel_hide" id="meter-no2">
+                                    <option value="">$user_add_019</option>
+                                    <option value="JOY" selected="selected">JOY</option>
+                                </select>
+                                <select class="form-control-inline  required  sel_hide" id="meter-protocol2">
+                                    <option value="">$user_add_020</option>
+                                    <option value="com.joymeter.dtu.data.ParseWaterData">$user_manage_132</option>
+                                    <option value="com.joymeter.dtu.data.other.ParseWaterData_002">$user_manage_138</option>                                   
+                                    <option value="com.joymeter.dtu.data.ParseHeatData">$user_manage_133</option>
+                                    <option value="com.joymeter.dtu.data.other.ParseHeatData_001">$user_manage_133(901F)</option>
+                                    <option value="com.joymeter.dtu.data.other.ParseGasData_001">$user_manage_134</option>
+                                    <option value="com.joymeter.dtu.data.other.ParseElecData_001">$user_manage_139</option>
+                                    <option value="com.joymeter.dtu.data.ParseData_1434">$user_manage_140</option>
+                                    <option value="com.joymeter.dtu.data.other.ParseElecData_002">$user_manage_149</option>
+                                    <option value="4">$user_manage_156</option>
+                                    <option value="JLAA_ELEC">$user_manage_157</option>
+                                    <option value="JLAA_WATER">$user_manage_158</option>
+                                    <option value="JLAA_Heat">$user_manage_159</option>
+                                    <option value="JLAA_GAS">$user_manage_160</option>
+                                </select>
+                                <select class="form-control-inline sel_hide required" id="valve-protocol2">
+                                    <option value="">$user_manage_143</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseElecValveData_001">$user_manage_144</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseHeatValveData_001">$user_manage_145</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseWaterValveData_001">$user_manage_146</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseTempeValveData_001">$user_manage_147</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseTempeValveData_002">$user_manage_14701</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseElecValveData_002">$user_manage_150</option>
+                                    <option value="com.joymeter.dtu.data.other.valve.ParseElecValveData_003">$user_manage_151</option>
+                                    <option value="JLAA_ELEC">$user_manage_161</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="price-type2" class="col-sm-2 control-label">
+                                $public_022
+                            </label>
+                            <div class="col-sm-10">
+                                <select class="form-control-inline  required  sel_hide" id="price-type2"></select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meter-cardID2" class="col-sm-2 control-label">
+                                $public_004
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-inline required"
+                                       id="meter-cardID2" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="meter-subID2" class="col-sm-2 control-label">
+                                $user_manage_162
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-inline  required"
+                                       id="meter-subID2" value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="valve-cardID2" class="col-sm-2 control-label">
+                                $user_add_011
+                            </label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control-inline  required"
+                                       id="valve-cardID2"  value="">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="house-coefficient2" class="col-sm-2 control-label">
+                                $user_add_013
+                            </label>
+                            <div class="col-sm-10">
+                                <select class="form-control-inline" id="house-coefficient2">
+                                    <option  value="1.0" selected>1.0</option>
+                                </select>
+                            </div>
+                        </div> 
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button id="regist" type="button" class="button blue">
+                        $user_add_014
+                    </button>
+                    <button type="button" class="button white" id="res">
+                        $user_add_015
+                    </button>
+                </div>
+            </div>
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $('.sel_hide').each(function () {
+                    $(this).on('focus', function () {
+                        $(this).children('option').first().hide();
+                    });
+                })
+            });
+        </script>
+    </body>
+</html>

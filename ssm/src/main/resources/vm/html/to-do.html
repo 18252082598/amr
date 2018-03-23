@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title id="language_mark">$to_do_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script src="../echarts/echarts.js" type="text/javascript"></script>
+        <!--[if lt IE 9]>
+        <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+        <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="../js/cookie_util.js"></script>
+         <script src="../js/language-manage.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="to-do.js"></script>
+        <script src="logout.js"></script>
+    </head>
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt="$navigation_010">
+                    <ul>
+                        <li id="welcome"><p>$navigation_001<span id="admin"></span></p></li>
+                        <li id="to-do"><a href="$navigation_href_001"> <p>$navigation_002<span id="sum-to-do"></span></p></a></li>
+                        <li id="exit"><p>$navigation_003</p></li>
+                    </ul>
+                </div>
+            </div>       
+            <div id="mainmenu"  class="" role="navigation" >
+                <div class="container">
+                    <ul class="nav navbar-nav">                     
+                        <li><a href="$navigation_href_002">$navigation_004</a></li>
+                        <li class=""><a href="$navigation_href_003"><span>$navigation_005</span></a></li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span> </a>
+                        </li>
+                        <li><a href="$navigation_href_004"><span>$navigation_006</span></a></li>
+                        <li><a href="$navigation_href_005"><span>$navigation_007</span></a></li>
+                        <li><a href="$navigation_href_006"><span>$navigation_008</span></a></li>
+                        <li><a href="$navigation_href_007"><span>$navigation_009</span></a></li>
+                    </ul>
+                    <div class="dropdown  pull-right nav navbar-nav">
+                        <button  type="button" data-toggle="dropdown">                  
+                            <span  id="text">$to_do_029</span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dLabel" >                         
+                            <li><a href="#">Chinese</a></li>
+                            <li><a href="#">English</a></li>                        
+                        </ul>
+                    </div> 
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li><a><span>$to_do_002</span></a></li>
+                        <li id="meter-list"><a  href="$navigation_href_002">$recharge_012</a></li>
+                        <li><a href="$navigation_href_008">$remote_read_005</a></li>
+                        <li><a href="$navigation_href_009">$to_do_003</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--</div>-->
+
+            <!--中间主体部分 -->
+            <div  class="h50"></div>
+            <div   class="main">
+                <div  class="row">
+                    <div class="col-md-6" id="div_lef">
+
+                        <table class="table"  id="table1">
+                            <tr>
+                                <td  class="">
+                                    <span  class="cbbg">$to_do_004</span>
+                                    <span  class="pull-right">
+                                        <a href="$navigation_href_003">$to_do_005</a></span>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td  class="clearfix" id="cbcg" >
+                                    <div class="pull-left" id="clear1">
+                                        <p>0</p>
+                                        <span>$to_do_006</span>
+
+                                    </div>
+                                    <div class="pull-left red" id="readFailNo">
+                                        <p>0</p>
+                                        <span>$to_do_007</span>
+                                    </div>
+                                    <div class="pull-left red" id="deductFailNo">
+                                        <p>0</p>
+                                        <span>$to_do_008</span>
+                                    </div>
+                                    <div class="pull-left red" id="batteryLowNo">
+                                        <p>0</p>
+                                        <span>$to_do_009</span>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <h3>$to_do_010</h3>
+                                    <div  id="clear2">
+                                        <div class="org pull-left">
+                                            <p>0</p>
+                                            <span><a href="$navigation_href_004?status=1">$to_do_011</a></span>
+                                        </div>
+                                        <div class="red pull-left">
+                                            <p>0</p>
+                                            <span><a href="$navigation_href_004?status=0">$to_do_012</a></span>
+                                        </div>
+                                        <div  class="red pull-left">
+                                            <p>0</p>
+                                            <span><a href="$navigation_href_008">$to_do_013</a></span>
+                                        </div>
+
+                                    </div>
+                                    <table id="t1" class="table  table-bordered">
+                                        <tr>
+                                            <td>$public_016</td>
+                                            <td>$public_017</td>
+                                            <td>$public_018</td>
+                                            <td>$to_do_014</td>
+                                            <td>$to_do_015</td>
+                                        </tr>
+                                        <tr>
+                                            <td  class="zb1"></td>
+                                            <td  class="zb1"></td>
+                                            <td  class="zb1"></td>
+                                            <td  class="zb1"></td>
+                                            <td  class="zb1"></td>
+                                        </tr>
+                                    </table>
+                                </td>
+                            </tr>
+                        </table>
+                        <div style="border:1px dotted black"  class="clearfix" id="div2">
+                            <h3>$to_do_016</h3>
+                            <dl>
+                                <dt   class="" style="overflow-x: auto">
+                                    <!-- <div></div>  -->
+                                    <!--<div><canvas id="canvas" width="200" height="200"></canvas></div>-->
+                                    <div id="canvas" style="width:600px;height:300px;"></div>
+                                </dt>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="col-md-6"   id="div3">
+
+                        <!---- 新布局----->
+                        <div>
+                            <h3>$to_do_017</h3>
+                        </div>
+                        <div   id="table2">
+                            <div class="pull-left">
+                                <p>0</p>
+                                <span>$to_do_017</span>
+                            </div>
+                            <div  class="pull-left"  id="bztf">
+                                <p>0</p>
+                                <span>$to_do_018</span>
+                            </div>
+                        </div>
+                        <div  class="table-responsive">
+                            <table id="weeklyRecharge" class="table  table-bordered">
+                                <caption  class="">$to_do_019</caption>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                    <td></td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div  class="h30"></div>
+                        <div  id="phang">
+                            <h3>$to_do_020</h3>
+                            <div  class="table-responsive">
+                                <table  id="table3">
+                                    <tr  class="ch1"></tr>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!--</div>-->
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+
+        <script>
+            // 本月业务办理量
+            var rechargeNo = 0;
+            var refundNo = 0;
+            var changeMeterNo = 0;
+            var delUserNo = 0;
+            jQuery.ajax({
+                url: "../user/beenDone.do",
+                type: "post",
+                async: false,
+                dataType: "json",
+                success: function (result) {
+                    if (result.status == 1) {
+                        var map = result.data;
+                        rechargeNo = map["rechargeNo"];
+                        refundNo = map["refundNo"];
+                        changeMeterNo = map["changeMeterNo"];
+                        delUserNo = map["delUserNo"];
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+
+            require.config({
+                paths: {
+                    echarts: '../echarts' //引用资源文件夹路径，注意路径
+                }
+            });
+            require(
+                    [
+                        'echarts',
+                        //'echarts/chart/funnel',
+                        'echarts/chart/pie'
+                    ],
+                    function (ec) {
+                        var myChart = ec.init(document.getElementById('canvas'));
+                        var ecConfig = require('echarts/config');
+                        var option = {
+                            //如果数值都为零，。。。。 
+                            color: ['#071472', '#00eefd', '#fb0042', '#00ff42'],
+                            tooltip: {
+                                trigger: 'item',
+                                formatter: "{a}  <br>{b}: {c}({d}%)"
+                            },
+                            legend: {
+                                orient: 'vertical',
+                                //selectedMode:false,
+                                x: 'right',
+                                y: 'center',
+                                //                    data:['充值','退费','换表','更换价格类型']
+                                data: [{
+                                        name: "$recharge_012",
+                                        icon: 'bar'
+                                    },
+                                    {name: '$recharge_066',
+                                        icon: 'bar'
+                                    },
+                                    {name: '$to_do_011',
+                                        icon: 'bar'
+                                    },
+                                    {
+                                        name: '$to_do_012',
+                                        icon: 'bar'
+                                    }
+                                ]
+                            },
+                            toolbox: {
+                                x: 'left',
+                                show: true,
+                                feature: {
+                                    //                        mark: { show: true },
+                                    dataView: {show: true, readOnly: false},
+                                    restore: {show: true}
+                                    //                       saveAsImage: { show: true }
+                                }
+                            },
+                            series: [{
+                                    name: "$to_do_021",
+                                    type: "pie",
+                                    radius: '55%',
+                                    center: ['40%', '50%'],
+                                    data: [
+                                        {value: rechargeNo, name: '$recharge_012'},
+                                        {value: refundNo, name: '$recharge_066'},
+                                        {value: changeMeterNo, name: '$to_do_011'},
+                                        {value: delUserNo, name: '$to_do_012'},
+                                    ]
+                                }
+                            ]
+                        };
+                        myChart.setOption(option);
+                    }
+            );
+        </script>
+    </body>
+</html>

@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>$mbus_manage_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>   
+        <!--[if lt IE 9]>
+        <script src="../js/html5shiv.min.js"></script>
+        <script src="../js/respond.min.js"></script>
+        <![endif]-->
+        <script src="../js/cookie_util.js"></script>
+        <script src="access.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="logout.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="mbus-manage.js"></script>
+    </head>
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt="$navigation_010">
+                    <ul>
+                        <li id="welcome"><p>$navigation_001<span id="admin"></span></p></li>
+                        <li id="to-do"><a href="$navigation_href_001"> <p>$navigation_002<span id="sum-to-do"></span></p></a></li>
+                        <li id="exit"><p>$navigation_003</p></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mainmenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li><a href="$navigation_href_002">$navigation_004</a></li>
+                        <li class="active"><a href="$navigation_href_003"><span>$navigation_005</span></a></li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span></a>
+                        </li>
+                        <li><a href="$navigation_href_004"><span>$navigation_006</span></a></li>
+                        <li><a href="$navigation_href_005"><span>$navigation_007</span></a></li>
+                        <li><a href="$navigation_href_006"><span>$navigation_008</span></a></li>
+                        <li><a href="$navigation_href_007"><span>$navigation_009</span></a></li>
+                    </ul>
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li><a href="$navigation_href_003">$remote_read_002</a></li>
+                        <li id="meter-list"><a href="$navigation_href_011">$remote_read_003</a></li>
+                         <li><a href="$navigation_href_025">$share_billing_001</a>
+                        </li> 
+                        <li><a href="$navigation_href_008">$remote_read_005</a></li>
+                        <li class="active"><a href="$navigation_href_012">$remote_read_006</a></li>
+                    </ul>
+                </div>
+            </div>
+            <!--中间主体部分 -->
+            <div class="main" id="mbus-manage-div1">
+                <!--上部分 -->
+                <div class="nav">
+                    <ul>
+                        <li class="tab-main">$remote_read_006</li>
+                        <li class="tab-sub"  id="add"><a  href="#">$mbus_manage_002</a></li>
+                    </ul>
+                </div>
+                <div class="big-list">
+                    <!--列表主题部分 -->
+                    <div class="list  table-responsive">
+                        <table id="t1" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="page" colspan="22">
+                                        <form>$public_006<select id="pageSize" onchange="load_concentrators()">
+                                                <option value="5">5</option>
+                                                <option value="10" selected="selected">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                            <span id="span3" style="cursor:pointer" class="glyphicon glyphicon-step-backward"></span>
+                                            <span id="span2" style="cursor:pointer" class="triangle-left"></span>
+                                            $public_008<input id="pageIndex" class="input-page" value="1" name="">$public_009
+                                            <span id="span1" style="cursor:pointer" class="triangle-right"></span>
+                                            <span id="span4" style="cursor:pointer" class="glyphicon glyphicon-step-forward"></span>
+                                            $public_010<span><b>1</b></span>$public_009
+                                        </form>
+                                    </th>
+                                </tr>
+                                <tr class="table-th">
+                                    <th>$public_015</th>
+                                    <th>$public_021</th>
+                                    <th>$mbus_manage_003</th>
+                                    <th>$mbus_manage_033</th>
+                                    <th>$mbus_manage_004</th>
+                                    <th>$mbus_manage_036</th>
+                                    <!--2015.11.2新增-->
+                                    <th>$mbus_manage_005</th>
+                                    <!--2015.10.26新增三项-->
+                                    <th>$public_016</th>
+                                    <th>$public_017</th>
+                                    <th>$public_018</th>
+                                    <th>$mbus_manage_006</th>
+                                    <th>$public_028</th>                                    
+                                    <th>$public_025</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr></tr>                       
+                            </tbody>                       
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+        <!-- 添加集中器-->
+        <div class="modal fade" id="mbus-add" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h5 class="modal-title" id="myModalLabel">
+                            $mbus_manage_002
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label  for="concentrator_name"  class="col-sm-4  control-label">$public_021</label>
+                                <div  class="col-sm-8">
+                                    <input  type="text" class="form-control-inline  required" id="concentrator_name" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="concentrator_no" class="col-sm-4 control-label">$mbus_manage_003</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control-inline  required" id="concentrator_no">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label  class="col-sm-4 control-label">$mbus_manage_033</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control-inline  required" id="gateway_id">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="concentrator_ip" class="col-sm-4 control-label">$mbus_manage_024</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control-inline  required" id="concentrator_ip">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="concentrator_port" class="col-sm-4 control-label">$mbus_manage_025</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control-inline  required" id="concentrator_port">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="sim_no" class="col-sm-4 control-label">$mbus_manage_004</label>
+                                <div class="col-sm-8">
+                                    <input type="text" class="form-control-inline required" id="sim_no" >
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="concectrator_model" class="col-sm-4 control-label">$mbus_manage_036</label>
+                                <div class="col-sm-8">
+                                    <select id="concentrator_model" class="form-control-inline required">
+                                        <option value="$public_068">$public_068</option>
+                                        <option value="$public_069">$public_069</option>
+                                        <option value="$public_070">$public_070</option>
+                                        <option value="$public_071">$public_071</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div  class="form-group">
+                                <label  class="col-sm-4 control-label">$mbus_manage_007</label>
+                                <div  class="col-sm-8">
+                                    <select name="" id="community" onchange="findAllBuildings()" class="form-control-inline  sel1 sel_hide" ></select>
+                                    <select name="" id="building" onchange="findAllUnits()" class="form-control-inline sel2 sel_hide" style="margin-left: 10px;"></select>
+                                    <select name="" id="unit" class="form-control-inline  sel2 sel_hide" style="margin-left: 10px;"></select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="add_concentrator" type="button" class="button blue">$mbus_manage_008
+                        </button>
+                        <button id="add_cancel" type="button" class="button white" data-dismiss="modal">
+                            $mbus_manage_009
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script>
+
+            $(document).ready(function () {
+                /*****修改集中器*****/
+                $('tbody').on('click', '.glyphicon-pencil', function () {
+                    $('#myModalLabel').text('$mbus_manage_011');
+                    $('.modal-footer button:first').text('$mbus_manage_012');
+                    $('#mbus-add').modal();
+                });
+                /******点击添加集中器绑定事件******/
+                $('#add a').click(function () {
+                    $('#myModalLabel').text('$mbus_manage_002');
+                    $('.modal-footer button:first').text('$mbus_manage_008');
+                    $('#mbus-add').modal();
+                });
+            });
+
+            /******集中器添加验证*******/
+            $(document).ready(function () {
+                $('form  input').blur(function () {
+                    var $parent = $(this).parent();
+                    $parent.find('.formtips').remove();
+                    var $tip = $('<label  class="formtips"></label>');
+                    value = jQuery.trim(this.value);
+                    //集中器名称验证
+                    if ($(this).is('#concentrator_name')) {
+                        if (!value) {
+                            $tip.addClass('onError').$mbus_manage_013;
+                        } else if (value.length > 50) {
+                            $tip.addClass('onError').$mbus_manage_015;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('');
+                        }
+                        $parent.append($tip);
+                    }
+                    //集中器编号验证
+                    if ($(this).is('#concentrator_no')) {
+
+                        if (!value) {
+                            $tip.addClass('onError').$mbus_manage_016;
+                        } else if (!/^[0-9A-Z]*$/.test(value)) {
+                            $tip.addClass('onError').$mbus_manage_017;
+                        } else if (value.length > 50) {
+                            $tip.addClass('onError').$mbus_manage_018;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('');
+                        }
+                        $parent.append($tip);
+                    }
+
+                    //网关编号
+                    if ($(this).is('#gateway_id')) {
+                        if (!value) {
+                            $tip.addClass('onError').$mbus_manage_035;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('');
+                        }
+                        $parent.append($tip);
+                    }
+                    //手机号码验证
+                    if ($(this).is('#sim_no')) {
+                        if (!value) {
+                            $tip.addClass('onError').$mbus_manage_019;
+                        } else if (!/^[0-9-_]{1,20}$/.test(value)) {
+                            $tip.addClass('onError').$mbus_manage_020;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('');
+                        }
+                        $parent.append($tip);
+                    }
+                    //集中器ip验证
+                    if ($(this).is('#concentrator_ip')) {
+
+                        if (!value) {
+                            $tip.addClass('onError').$mbus_manage_026;
+                        } else if (!/^([1-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])(\.([0-9]|[1-9][0-9]|1[0-9][0-9]|2[0-4][0-9]|25[0-5])){3}$/.test(value)) {
+                            $tip.addClass('onError').$mbus_manage_028;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('');
+                        }
+                        $parent.append($tip);
+                    }
+                    //集中器端口验证
+                    if ($(this).is('#concentrator_port')) {
+                        if (!value) {
+                            $tip.addClass('onError').$mbus_manage_027;
+                        } else if (!/^[0-9]{1,6}$/.test(value)) {
+                            $tip.addClass('onError').$mbus_manage_028;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('');
+                        }
+                        $parent.append($tip);
+                    }
+
+                });
+
+                $('#mbus-add').on('show.bs.modal', function () {
+                    $('.formtips').remove();
+                    $("form  input.required").val("");
+                });
+                $('.sel_hide').each(function () {
+                    $(this).on('focus', function () {
+                        $(this).children('option').first().hide();
+                    });
+                })
+            });
+        </script>
+    </body>
+</html>

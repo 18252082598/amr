@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>$account_information_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>	
+        <script src="../js/cookie_util.js"></script>
+        <script src="logout.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="access.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="account-information.js"></script>       	
+        <!--[if lt IE 9]>
+        <script src="../js/html5shiv.min.js"></script>
+        <script src="../js/respond.min.js"></script>
+        <![endif]-->
+        <script src="../js/sum-to-do.js"></script>	
+    </head>
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt=$navigation_010>
+                    <ul>
+                        <li id="welcome">
+                            <p>
+                                $navigation_001
+                                <span id="admin"></span>
+                            </p>
+                        </li>
+                        <li id="to-do">
+                            <a href=$navigation_href_001>
+                                <p>
+                                    $navigation_002
+                                    <span id="sum-to-do"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li id="exit">
+                            <p>
+                                $navigation_003
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mainmenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href=$navigation_href_002>$navigation_004</a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_003><span>$navigation_005</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span> </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_004><span>$navigation_006</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_005><span>$navigation_007</span>
+                            </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_006><span>$navigation_008</span>
+                            </a>
+                        </li>
+                        <li class="active">
+                            <a href=$navigation_href_007><span>$navigation_009</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href=$navigation_href_007>$administrator_manage_002</a>
+                        </li>
+                        <li>
+                            <a  href=$navigation_href_018>$administrator_manage_003</a>
+                        </li>
+                        <li  class="active">
+                            <a href=$navigation_href_019>$administrator_manage_004</a>
+                        </li>                   
+                    </ul>
+                </div>
+            </div>
+
+            <!--中间主体部分 -->
+            <div class="main" id="account-information-div1">
+                <!--上部分 -->
+
+                <div id="myTab" class="nav" >
+                    <ul>
+                        <li class="tab-main">
+                            $account_information_006
+                        </li>
+                        <li class="tab-sub">
+                            <a data-toggle="modal" href="#tab-account-xg">$account_information_007</a>
+                        </li>
+
+                    </ul>
+                </div>
+
+                <div id="myTabContent" class="big-list">
+
+                    <!--列表主题部分 -->
+                    <div class="fade in active" id="tab-account-list">
+
+                        <table  class="table  table-responsive" id="t1">
+                            <tr>
+                                <td><span>$account_information_008</span></td>
+                                <td><span></span></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><span>$account_information_009</span></td>
+                                <td><span></span></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><span>$account_information_010</span></td>
+                                <td><span></span></td>
+                                <td>
+                                    <button  class="button white" type="button" >$account_information_011</button >
+                                    <!--<button  class="button blue" type="button">$account_information_012</button>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>$account_information_013</span></td>
+                                <td><span></span></td>
+                                <td>
+                                    <button  class="button white" type="button">$account_information_011</button >
+                                    <!--<button  class="button blue" type="button">$account_information_012</button>-->
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><span>$account_information_014</span></td>
+                                <td><span></span></td>
+                                <td></td>
+                            </tr>
+                            <tr>
+                                <td><span>$account_information_015</span></td>
+                                <td><span></span></td>
+                                <td></td>
+                            </tr>
+                        </table>         
+                    </div>
+
+                    <!--修改密码-->
+                    <div   class="modal fade"  id="tab-account-xg" tabindex="-1" role="dialog"
+                           aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static"  >
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div  class="modal-header">
+                                    <button  class="close" type="button"  data-dismiss="modal" aria-hidden="true">&times;</button>
+                                    <h5  class="modal-title">$account_information_017</h5>
+                                </div>
+                                <form  class="form-horizontal" role="form">
+                                    <div class="modal-body" >
+                                        <div  class="form-group">
+                                            <label class="col-xs-3 control-label">$account_information_018</label>
+                                            <input   type="password" value="" class="form-control-inline"  name="original_password"  id="original-password"> <span id="s2"></span>
+                                        </div>
+                                        <div  class="form-group">
+                                            <label class="col-xs-3 control-label">$account_information_019</label>
+                                            <input   type="password"  value="" class="form-control-inline required" name="password"  id="admin-password">
+                                        </div>
+                                        <div  class="form-group">
+                                            <label class="col-xs-3 control-label">$account_information_020</label>
+                                            <input  type="password"  value="" class="form-control-inline  required"  name="confirm_password" id="confirm-password">
+                                        </div>
+                                    </div>
+                                    <!---按钮--->
+                                    <div class="modal-footer" >
+                                        <button class="button blue" type="button" id="passwordChange">
+                                            $account_information_021
+                                        </button>
+                                        <button class="button white" type="button" data-dismiss="modal">
+                                            $account_information_022
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+                $("table tr:eq(2) button").bind("click", function () {
+                    var sex = $(this).parent().prev().children();
+                    var value = sex.text();
+                    var value2 = sex.val();
+                    if ($(this).text() == "$account_information_011") {            //第一次点击
+                        sex.replaceWith("<input  type='text' style='height:26px' id='modifyName' value=" + value + " size='15'>");
+                        $(this).text("$account_information_012").addClass('blue');
+                    } else if ($(this).text() == "$account_information_012") {
+                        if (value2 == "") {
+                            alert("$account_information_024");
+                            sex.focus();
+                            return false;
+                        } else {
+                            modifyNameById();
+                        }
+                        sex.replaceWith("<span>" + value2 + "</span>");
+                        $(this).text("$account_information_011").removeClass('blue');
+                    }
+                });
+
+                //第二个按钮绑定事件
+                $("table tr:eq(3)  button").bind("click", function () {
+                    var sex = $(this).parent().prev().children();
+                    var value = sex.text();
+                    var value2 = sex.val();
+                    if ($(this).text() == "$account_information_011") {
+                        sex.replaceWith("<input  type='text'style='height:26px' id='modifyTel' value=" + value + " size='15'>");
+                        $(this).text("$account_information_012").addClass('blue');
+                    } else if ($(this).text() == "$account_information_012") {
+                        if (value2 == "" || !/^[0-9-_]{1,20}$/.test(value2)) {
+                            alert("$account_information_025");
+                            sex.focus();
+                            return false;
+                        } else {
+                            modifyTelById();
+                        }
+                        sex.replaceWith("<span>" + value2 + "</span>");
+                        $(this).text("$account_information_011").removeClass('blue');
+                    }
+                });
+            });
+
+        </script>
+        <script>
+            $(document).ready(function () {
+
+                $('#tab-account-xg  form :input').blur(function () {
+                    var $parent = $(this).parent();
+                    $parent.find(".formtips").remove();
+                    var $tip = $('<label  class="formtips"></label>');
+                    value = jQuery.trim(this.value);
+                    //验证密码
+                    if ($(this).is('#admin-password')) {
+                        if ((!value) || value.length < 6) {
+                            $tip.addClass('onError').$account_information_029;                          
+                        } else if (value.length > 50) {
+                            $tip.addClass('onError').$location_manage_030;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('').css('color', '#666');
+                        }
+                        $(this).parent().append($tip);
+                    }
+
+                    if ($(this).is('#confirm-password')) {
+                        var value2 = $('#admin-password').val();
+                        if (value == "") {
+                            $tip.addClass('onError').$account_information_029;
+
+                        } else if (value != value2) {
+                            $tip.addClass('onError').$account_information_030;
+                        } else {
+                            $tip.addClass('glyphicon  glyphicon-ok').text('').css('color', '#666');
+                        }
+                        $(this).parent().append($tip);
+                    }
+                });
+
+                $('#tab-account-xg').on("hidden.bs.modal", function () {
+                    $('#s2').text("").removeClass('glyphicon  glyphicon-ok');
+                    $('#original-password').val("");
+                    $('#admin-password').val("");
+                    $('#confirm-password').val("");
+                    $('#admin-password').next().text("").removeClass('glyphicon  glyphicon-ok');
+                    $('#confirm-password').next().text("").removeClass('glyphicon  glyphicon-ok');
+                });
+                $('#tab-account-xg').on("shown.bs.modal", function () {
+
+                    $('#original-password').focus();
+                });
+            });
+        </script>
+    </body>
+</html>

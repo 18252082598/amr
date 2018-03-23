@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>$user_manage_001</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">
+        <link href="../css/bootstrap.min.css" rel="stylesheet">
+        <link href="../css/ejoy.css" rel="stylesheet">
+        <script src="../js/jquery-2.1.1.min.js"></script>
+        <script src="../js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="$importJS_025"></script>
+        <!--[if lt IE 9]>
+            <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+        <![endif]-->
+        <script src="../js/cookie_util.js"></script>
+        <script src="access.js"></script>
+        <script src="../js/sum-to-do.js"></script>
+        <script src="logout.js"></script>
+        <script src="../js/get_time.js"></script>
+        <script src="../js/get_url_parameter.js"></script>
+        <script src="util.js"></script>
+        <script  src="form-validation.js"></script>
+        <script  src="../js/jquery-form.js"></script>
+        <script src="motherMeter-config.js"></script>
+        <script src="query_option.js"></script>
+
+    </head>
+    <body>
+        <!--容器 -->
+        <div class="big-container">
+            <!--头部 -->
+            <div class="topbar">
+                <div class="container">
+                    <img id="logo" src="../images/all/u17.png" alt=$navigation_010>
+                    <ul>
+                        <li id="welcome">
+                            <p>
+                                $navigation_001
+                                <span id="admin"></span>
+                            </p>
+                        </li>
+                        <li id="to-do">
+                            <a href=$navigation_href_001>
+                                <p>
+                                    $navigation_002
+                                    <span id="sum-to-do"></span>
+                                </p>
+                            </a>
+                        </li>
+                        <li id="exit">
+                            <p>
+                                $navigation_003
+                            </p>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="mainmenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href=$navigation_href_002>$navigation_004</a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_003><span>$navigation_005</span> </a>
+                        </li>
+                        <li>
+                            <a href="$navigation_href_023"><span>$cardManage_001</span> </a>
+                        </li>
+                        <li class="active">
+                            <a href=$navigation_href_004><span>$navigation_006</span> </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_005><span>$navigation_007</span> </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_006><span>$navigation_008</span> </a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_007><span>$navigation_009</span> </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div id="modulemenu">
+                <div class="container">
+                    <ul class="nav">
+                        <li>
+                            <a href=$navigation_href_004>$user_manage_002</a>
+                        </li>
+                        <li class="active">
+                            <a href=$navigation_href_0004>$user_manage_0002</a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_013>$user_manage_003</a>
+                        </li>
+                        <li>
+                            <a href=$navigation_href_014>$user_manage_004</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!--中间主体部分 -->
+            <div class="main" id="motherMeter-config-div1">
+                <!--上部分 -->
+                <div class="nav">
+                    <ul>
+                        <li class="tab-main">
+                            $mother_meter_confg_001
+                        </li>
+                        <li class="tab-sub">
+                            <a data-toggle="modal" href="#addMotherMeterConf" id="add_MotherMeterConf">$mother_meter_confg_002</a>
+                        </li>
+                        <li class="tab-sub">
+                            <a data-toggle="modal" href="#tab-import">$mother_meter_confg_003</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="big-list">
+                    <!--表格查询部分 -->
+                    <div class="row-search  form-inline">
+                        <div class="form-group">
+                            <span>$user_manage_013</span>
+                            <input id="meter_no" type="text" name="表出厂编号">
+                            <button id="findMeterConfig" class="button white" type="submit">
+                                <span class="search">$user_manage_014</span>
+                            </button>
+                        </div>
+                    </div>
+                    <!--列表主题部分 -->
+                    <div class="list table-responsive">
+                        <table id="t1" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th class="page" colspan="18">
+                                        <form>
+                                            $user_manage_015
+                                            <select class="pageSize" onchange="change(this.options[this.selectedIndex].value)">
+                                                <option value="5" selected="selected">5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                            <span style="cursor:pointer" class="glyphicon glyphicon-step-backward span3" title=$user_manage_017></span>
+                                            <span style="cursor:pointer" class="triangle-left span2" title=$user_manage_018></span> $user_manage_021
+                                            <input class="input-page" value="1"> $user_manage_022
+                                            <span style="cursor:pointer" class="triangle-right span1" title=$user_manage_019></span>
+                                            <span style="cursor:pointer" class="glyphicon glyphicon-step-forward span4" title=$user_manage_020></span>
+                                            $user_manage_023<span><b></b></span>$user_manage_022
+                                        </form>
+                                    </th>
+                                </tr>
+                                <tr class="table-th">
+                                    <th>
+                                        <input id="all_select" type="checkbox" >
+                                    </th>
+                                    <th>
+                                        $user_manage_024
+                                    </th>
+                                    <th>
+                                        $read_list_046
+                                    </th>
+                                    <th>
+                                        $mother_meter_confg_004
+                                    </th>
+                                    <th>
+                                        $mother_meter_confg_005
+                                    </th>
+                                    <th>
+                                        $mother_meter_confg_006
+                                    </th>
+                                    <th>
+                                        $mother_meter_confg_007
+                                    </th>                                  
+                                </tr>
+                            </thead>
+                            <tfoot>
+                                <tr>
+                                    <th colspan="18">
+                                        <button id="delete_motherMeterConf" class="button white first-button" type="button">
+                                            $user_manage_037
+                                        </button>
+                                        <button id="modify_motherMeterConf" class="button white"  type="button">
+                                            $user_manage_036
+                                        </button>
+                                        <span>$user_manage_03701&nbsp;<span id="totalNo"  class="totalNo"></span>&nbsp;$user_manage_03702</span>
+                                        <!--翻页页面---->
+                                        <form>
+                                            $user_manage_015
+                                            <select class="pageSize" onchange="change(this.options[this.selectedIndex].value)">
+                                                <option value="5" >5</option>
+                                                <option value="10">10</option>
+                                                <option value="15">15</option>
+                                                <option value="20">20</option>
+                                                <option value="30">30</option>
+                                                <option value="50">50</option>
+                                            </select>
+                                            <span style="cursor:pointer" class="glyphicon glyphicon-step-backward span3" title=$user_manage_017></span>
+                                            <span style="cursor:pointer" class="triangle-left span2" title=$user_manage_018></span> $user_manage_021
+                                            <input class="input-page" value="1"> $user_manage_022
+                                            <span style="cursor:pointer" class="triangle-right span1" title=$user_manage_019></span>
+                                            <span style="cursor:pointer" class="glyphicon glyphicon-step-forward span4" title=$user_manage_020></span>
+                                            $user_manage_023<span><b></b></span>$user_manage_022
+                                        </form>
+                                    </th>
+                                </tr>
+                            </tfoot>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>         
+            <div class="footer">
+                <p>$public_034</p>
+            </div>
+        </div>
+
+
+        <!--修改-->
+        <div class="modal fade" id="modifyMeterInfo" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="closeModifyPanel" type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h5 class="modal-title" id="myModalLabel">
+                            $user_manage_056
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form" >
+
+                            <div class="form-group">
+                                <label for="modifyMeterNo" class="col-sm-2 control-label">
+                                    $user_manage_069
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control-inline  required" id="modifyMeterNo">
+                                </div>
+                            </div>
+                            <div class="form-group" id="motherType">
+                                <label for="modifyMeterType" class="col-sm-2 control-label">
+                                    $mother_meter_confg_004
+                                </label>
+                                <div class="col-sm-10">
+                                    <label><input name="motherType" type="radio" value="0" id="modifyPub"/>$mother_meter_confg_009</label>
+                                    <label><input name="motherType" type="radio" value="1" id="modifyPri"/>$mother_meter_confg_010</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="allotType">
+                                <label for="ModifyAllotType" class="col-sm-2 control-label">
+                                    $mother_meter_confg_005
+                                </label>
+                                <div class="col-sm-10" id="priParentChoice">
+                                    <label><input name="allotType" type="radio" value="0" />$mother_meter_confg_011</label>
+                                    <label  id="perHead"><input name="allotType" type="radio" value="1" />$mother_meter_confg_012</label>
+                                    <label  id="ratio"><input name="allotType" type="radio" value="2" />$mother_meter_confg_013</label>
+                                    <label  id="blower"><input name="allotType" type="radio" value="3" />$parent_meter_confg_001</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="modify_motherMeter_confirm" type="button" class="button blue"
+                                aria-hidden="true">
+                            $mother_meter_confg_017
+                        </button>
+                        <button type="button" class="button white" data-dismiss="modal">
+                            $user_manage_073
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--添加参数配置-->
+        <div class="modal fade" id="addMotherMeterConf" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button id="closeAddPanel" type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                        <h5 class="modal-title" id="myModalLabel">
+                            $mother_meter_confg_002
+                        </h5>
+                    </div>
+                    <div class="modal-body">
+                        <form class="form-horizontal" role="form">
+                            <div class="form-group">
+                                <label for="addMeterNo" class="col-sm-2 control-label">
+                                    $user_manage_069
+                                </label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control-inline  required"
+                                           id="addMeterNo"  value="" >
+                                </div>
+                            </div>
+                            <div class="form-group" id="addMotherType">
+                                <label for="addMeterType" class="col-sm-2 control-label">
+                                    $mother_meter_confg_004
+                                </label>
+                                <div class="col-sm-10">
+                                    <label><input name="motherType" type="radio" value="0" id="publicMeter" />$mother_meter_confg_009</label>
+                                    <label><input name="motherType" type="radio" value="1" id="privateMeter" checked/>$mother_meter_confg_010</label>
+                                </div>
+                            </div>
+                            <div class="form-group" id="addAllotType">
+                                <label for="addAllotType" class="col-sm-2 control-label">
+                                    $mother_meter_confg_005
+                                </label>
+                                <div class="col-sm-10" id="allShare">
+                                    <label><input name="allotType" type="radio" value="0" checked/>$mother_meter_confg_011</label>
+                                    <label id="addPerHead"><input name="allotType" type="radio" value="1"  />$mother_meter_confg_012</label>
+                                    <label id="addRatio"><input name="allotType" type="radio" value="2" />$mother_meter_confg_013</label>
+                                    <label id="addBlower"><input name="allotType" type="radio" value="3" />$parent_meter_confg_001</label>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="addCommit" type="button" class="button blue">
+                            $administrator_manage_037
+                        </button>
+                        <button type="button" class="button white" data-dismiss="modal"  id="addCancel">
+                            $user_manage_073
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--删除确认-->
+        <div class="modal fade" id="delete-motherConf" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div  class="modal-header">
+                        <button type="button" class="close"  data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <h4>$mother_meter_confg_008</h4>
+                    </div>
+                    <div class="modal-footer">
+                        <button id="delCommit" type="button" class="button blue">
+                            $user_manage_037
+                        </button>
+                        <button id="delCancel" type="button"
+                                class="button white" data-dismiss="modal">
+                            $user_manage_073
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--导入参数-->
+        <div class="modal fade" id="tab-import" tabindex="-1" role="dialog"
+             aria-labelledby="myModalLabel" aria-hidden="true" data-backdrop="static">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div  class="modal-header">
+                        <button id="close_modify_user" type="button" class="close"
+                                data-dismiss="modal" aria-hidden="true">
+                            &times;
+                        </button>
+                    </div>
+                    <div class="modal-body" id="upLoadDiv">                        
+                        <form id="fileUpload" enctype="multipart/form-data" action="">
+                            <input id="file1" type="file" name="file1"/>
+                            <input id="lang" type="hidden" name="lang"/>
+                        </form>
+                        <p>$user_manage_130</p>
+                        <form  id="fileDown" enctype="multipart/form-data" action="../motherMeterConf/downLoadConfExcel.do" >
+                            <input id="lang1" type="hidden" name="lang1"/>
+                            <input value="$user_manage_131" class="button white"/>
+                        </form>
+                    </div>
+                    <div style="display: none" id="hideDiv">
+                        <p style="color: red" class="text-center" >正在上传文件！</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="button blue" name="upload-submit" >
+                            $user_manage_082
+                        </button>
+                        <button type="button" class="button white" data-dismiss="modal" name="upload-cencel" >
+                            $user_manage_083
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            $(document).ready(function () {
+
+            });
+        </script>
+    </body>
+</html>
