@@ -33,7 +33,7 @@
         <!-- 注入连接信息 -->
         <property name="dataSource" ref="dbcp" />
         <!-- 注入SQL定义的XML信息 -->
-        <property name="mapperLocations" value="classpath:UserSQl.xml" />    
+        <property name="mapperLocations" value="classpath:UserSQL.xml" />    
         <property name="configLocation" value="classpath:mybatis-config.xml"/>  
     </bean>
      <!-- 扫描dao包下所有接口,批量生成dao实现类组件 -->
