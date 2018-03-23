@@ -3,7 +3,6 @@
 <configuration>
     <settings>
         <!--       <setting name="cacheEnabled" value="true" /> -->
-        <setting name="defaultExecutorType" value="REUSE"/>
-        <setting name="logImpl" value="STDOUT_LOGGING"/>
+        <setting name="defaultExecutorType" value="REUSE"/>s
     </settings>
 </configuration>

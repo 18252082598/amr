@@ -1,0 +1,2016 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//ibatis.apache.org//DTD Mapper 3.0//EN"      
+ "http://ibatis.apache.org/dtd/ibatis-3-mapper.dtd">
+
+<mapper namespace="com.joymeter.dao.UserDao">
+    <!-- 操作员登录 -->
+    <select id="findByName" parameterType="string" resultType="com.joymeter.entity.Admin">
+        select * from meter_admin where
+        admin_account=#{account_name}
+    </select>	
+    <!-- 查询本月抄表信息(本月抄表报告) -->
+    <select id="findReadInfoByMonth" resultType="com.joymeter.entity.ReadInfo">
+        select * from read_info where 
+        date_format(operate_time,'%Y%m') = date_format(curdate(),'%Y%m')
+        and isAutoClear != '10';
+    </select>
+    
+    <!-- 本月抄表报告(抄表成功) -->
+    <select id="findReadSuccessNo" resultType="int">
+        select count(info_id) from read_info where 
+        date_format(operate_time,'%Y%m') = date_format(curdate(),'%Y%m')
+        and exception = '1'
+        and isAutoClear != '10';
+    </select>
+    
+    <!-- 本月抄表报告(抄表失败) -->
+    <select id="findReadFailNo" resultType="int">
+        select count(info_id) from read_info where 
+        date_format(operate_time,'%Y%m') = date_format(curdate(),'%Y%m')
+        and exception = '0'
+        and isAutoClear != '10';
+    </select>
+    
+    <!-- 本月抄表报告(扣费失败) -->
+    <select id="findDeductFailNo" resultType="int">
+        select count(info_id) from read_info where 
+        date_format(operate_time,'%Y%m') = date_format(curdate(),'%Y%m')
+        and fee_status = '0'
+        and isAutoClear != '10';
+    </select>
+	
+    <!-- 查询全部用户信息(尽快处理) -->
+    <select id="findAllUser" resultType="com.joymeter.entity.User">
+        select * from meter_user
+    </select>
+    
+    <!-- 查询换表数量 -->
+    <select id="findMeterChangeNo" resultType="int">
+        select count(user_id) from meter_user where
+        user_status = '1' and meter_status != '1';
+    </select>
+    
+    <!-- 查询销户数量 -->
+    <select id="findUserDelNo" resultType="int">
+        select count(user_id) from meter_user where
+        user_status = '0' and meter_status != '5';
+    </select>
+    
+    <!-- 查询欠费数量 -->
+    <select id="findOverdueNo" resultType="int">
+        select count(user_id) from meter_user where
+        last_balance &lt; 0;
+    </select>
+	
+    <!-- 查询小区总数 -->
+    <select id="findCommunityNumber" resultType="int">
+        select count(community_id) from community
+    </select>
+	
+    <!-- 查询楼栋总数 -->
+    <select id="findBuildingNumber" resultType="int">
+        select count(building_id) from building
+    </select>
+	
+    <!-- 查询单元总数 -->
+    <select id="findUnitNumber" resultType="int">
+        select count(unit_id) from unit
+    </select>
+	
+    <!-- 查询集中器总数 -->
+    <select id="findMbusNumber" resultType="int">
+        select count(concentrator_id) from concentrator
+    </select>
+	
+    <!-- 查询水表总数 -->
+    <select id="findMeterNumber" resultType="int">
+        select count(user_id) from meter_user
+    </select>
+	
+    <!-- 某月业务办理量(充值) -->
+    <select id="findRechargeNo" resultType="int">
+        select count(operate_id) from operate_info where operate_type='1' 
+        and date_format(operate_time,'%Y-%m') = #{month};
+    </select>
+	
+    <!-- 某月业务办理量(退费) -->
+    <select id="findRefundNo" resultType="int">
+        select count(operate_id) from operate_info where operate_type='0'
+        and date_format(operate_time,'%Y-%m') = #{month};
+    </select>
+	
+    <!-- 某月业务办理量(换表) -->
+    <select id="findChangeMeterNo" resultType="int">
+        select count(info_id) from user_manage_info where info_content='3'
+        and date_format(operate_time,'%Y-%m') = #{month};
+    </select>
+	
+    <!-- 某月业务办理量(销户) -->
+    <select id="findDelUserNo" resultType="int">
+        select count(info_id) from user_manage_info where info_content='6'
+        and date_format(operate_time,'%Y-%m') = #{month};
+    </select>
+    
+    <!-- 某段时间内某个区域的充值业务统计 -->
+    <select id="findRechargeNo1" parameterType="map" resultType="int">
+        select count(operate_id) from operate_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_type!=''">operate_type='1'</if>
+            <if test="province!=null and province!=''">and province=#{province}</if>
+            <if test="city!=null and city!=''">and city=#{city}</if>
+            <if test="district!=null and district!=''">and district=#{district}</if>
+            <if test="beginDate!=null and beginDate!=''">and operate_time&gt;=#{beginDate}</if>
+            <if test="endDate!=null and endDate!=''">and operate_time&lt;=#{endDate}</if>
+        </trim>    
+    </select>
+	
+    <!-- 某段时间内某个区域的退费业务统计 -->
+    <select id="findRefundNo1" parameterType="map" resultType="int">
+        select count(operate_id) from operate_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_type!=''">operate_type='0'</if>
+            <if test="province!=null and province!=''">and province=#{province}</if>
+            <if test="city!=null and city!=''">and city=#{city}</if>
+            <if test="district!=null and district!=''">and district=#{district}</if>
+            <if test="beginDate!=null and beginDate!=''">and operate_time&gt;=#{beginDate}</if>
+            <if test="endDate!=null and endDate!=''">and operate_time&lt;=#{endDate}</if>
+        </trim>    
+    </select>
+	
+    <!-- 某段时间内某个区域的换表业务统计 -->
+    <select id="findChangeMeterNo1" parameterType="map"  resultType="int">
+        select count(info_id) from user_manage_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_type!=''">info_content='3'</if>
+            <if test="province!=null and province!=''">and province=#{province}</if>
+            <if test="city!=null and city!=''">and city=#{city}</if>
+            <if test="district!=null and district!=''">and district=#{district}</if>
+            <if test="beginDate!=null and beginDate!=''">and operate_time&gt;=#{beginDate}</if>
+            <if test="endDate!=null and endDate!=''">and operate_time&lt;=#{endDate}</if>
+        </trim>    
+    </select>
+	
+    <!-- 某段时间内某个区域的销户业务统计 -->
+    <select id="findDelUserNo1" parameterType="map" resultType="int">
+        select count(info_id) from user_manage_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_type!=''">info_content='6'</if>
+            <if test="province!=null and province!=''">and province=#{province}</if>
+            <if test="city!=null and city!=''">and city=#{city}</if>
+            <if test="district!=null and district!=''">and district=#{district}</if>
+            <if test="beginDate!=null and beginDate!=''">and operate_time&gt;=#{beginDate}</if>
+            <if test="endDate!=null and endDate!=''">and operate_time&lt;=#{endDate}</if>
+        </trim>    
+    </select>
+	
+    <!-- 某段时间内某个区域的充值总和统计 -->
+    <select id="findRechargeTotal2" parameterType="map" resultType="double">
+        select sum(recharge_money) from operate_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_type!=''">operate_type='1'</if>
+            <if test="province!=null and province!=''">and province=#{province}</if>
+            <if test="city!=null and city!=''">and city=#{city}</if>
+            <if test="district!=null and district!=''">and district=#{district}</if>
+            <if test="beginDate!=null and beginDate!=''">and operate_time&gt;=#{beginDate}</if>
+            <if test="endDate!=null and endDate!=''">and operate_time&lt;=#{endDate}</if>
+        </trim>    
+    </select>
+	
+    <!-- 某段时间内某个区域的退费总和统计 -->
+    <select id="findRefundTotal2" parameterType="map" resultType="double">
+        select sum(recharge_money) from operate_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_type!=''">operate_type='0'</if>
+            <if test="province!=null and province!=''">and province=#{province}</if>
+            <if test="city!=null and city!=''">and city=#{city}</if>
+            <if test="district!=null and district!=''">and district=#{district}</if>
+            <if test="beginDate!=null and beginDate!=''">and operate_time&gt;=#{beginDate}</if>
+            <if test="endDate!=null and endDate!=''">and operate_time&lt;=#{endDate}</if>
+        </trim>    
+    </select>
+    
+    <!-- 本周充值(含今天) -->
+    <select id="findTotalRecharge" resultType="double">
+        select sum(recharge_money) from operate_info where operate_type='1' 
+        and date_sub(curdate(), INTERVAL 6 DAY) &lt;= date(operate_time)
+    </select>
+	
+    <!-- 本周退费(含今天) -->
+    <select id="findTotalRefund" resultType="double">
+        select sum(recharge_money) from operate_info where operate_type='0'
+        and date_sub(curdate(), INTERVAL 6 DAY) &lt;= date(operate_time)
+    </select>
+	
+    <!-- 最近一周每天充值金额 -->
+    <select id="findRechargeAmount" resultType="double">
+        select sum(recharge_money) from operate_info where operate_type='1'
+        and date_sub(curdate(),interval #{dayNo} day)&lt;= date(operate_time)
+    </select>
+	
+    <!-- 小区充值查询(小区充值排行) -->
+    <select id="findCommunityRecharge" parameterType="string" resultType="double">
+        select sum(recharge_money) from operate_info where operate_type='1'
+        and user_address_community=#{community_name} and 
+        date_sub(curdate(), INTERVAL 6 DAY) &lt;= date(operate_time)
+    </select>
+	
+    <!-- 加载全部操作员账号信息 -->
+    <select id="loadAllOperators" resultType="com.joymeter.entity.Admin">
+        select * from meter_admin
+    </select>
+
+    <!-- 根据查询条件，加载用户 -->
+    <select id="findUser" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="contact_info!=null and contact_info!=''">and contact_info =#{contact_info}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="status=='1'">and user_status='1' and meter_status !='1'</if>
+            <if test="status=='0'">and user_status ='0' and meter_status !='5'</if>
+        </trim>
+        order by add_time desc limit #{startNo},#{pageSize}
+    </select>
+	
+    <!-- 根据查询条件，得到加载用户总数 -->
+    <select id="findTotalUser" parameterType="map" resultType="int">
+        select count(user_id) from meter_user
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="contact_info!=null and contact_info!=''">and contact_info =#{contact_info}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="status=='1'">and user_status='1' and meter_status !='1'</if>
+            <if test="status=='0'">and user_status ='0' and meter_status !='5'</if>
+        </trim>
+    </select>
+
+    <!-- 支付 -->
+    <insert id="pay" parameterType="com.joymeter.entity.OperateInfo">
+        insert into
+        operate_info(operate_id,user_name,province,city,district,user_address_area,user_address_community,user_address_building,user_address_unit,user_address_room,contact_info,concentrator_name,meter_model,meter_type,meter_no,fee_type,recharge_money,recharge_amount_m3,recharge_amount_kwh,operate_type,balance,operator_account,recharge_loc,pay_method,isPrint,operate_time)
+        values(#{operate_id},#{user_name},#{province},#{city},#{district},#{user_address_area},#{user_address_community},#{user_address_building},#{user_address_unit},#{user_address_room},#{contact_info},#{concentrator_name},#{meter_model},#{meter_type},#{meter_no},#{fee_type},#{recharge_money},#{recharge_amount_m3},#{recharge_amount_kwh},#{operate_type},#{balance},#{operator_account},#{recharge_loc},#{pay_method},#{isPrint},#{operate_time})
+    </insert>
+
+    <!-- 充值管理：更新账户金额 -->
+    <update id="update" parameterType="com.joymeter.entity.OperateInfo">
+        update meter_user set
+        last_balance = #{balance}
+        where meter_no = #{meter_no}
+    </update>
+
+    <!-- 根据用户名加载操作信息 -->
+    <select id="loadOperateInfo" parameterType="map"
+            resultType="com.joymeter.entity.OperateInfo">
+        select * from operate_info where user_name = #{user_name} 
+        order by operate_time desc limit #{startNo},#{pageSize}
+    </select>
+    
+    <!-- 根据表号加载操作信息 -->
+    <select id="loadOperateInfoByMeterNo" parameterType="map"
+            resultType="com.joymeter.entity.OperateInfo">
+        select * from operate_info where meter_no = #{meter_no} 
+        order by operate_time desc limit #{startNo},#{pageSize}
+    </select>
+    
+    <!-- 根据表号及操作类型加载金额操作信息 -->
+    <select id="loadOperateInfoByMeterNoAndOperate_type" parameterType="map"
+            resultType="com.joymeter.entity.OperateInfo">
+        select * from operate_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_no!=null and meter_no!=''">meter_no=#{meter_no}</if>
+            <if test="operate_type!=null and operate_type!=''">and operate_type=#{operate_type}</if>
+        </trim>
+        <choose>   
+            <when test="pageSize!=0">order by operate_time desc limit #{startNo},#{pageSize}</when>
+        </choose>
+    </select>
+	
+    <!-- 根据用户名查询操作信息总数 -->
+    <select id="findTotalOperateInfoNo" parameterType="string"
+            resultType="int">
+        select count(operate_id) from operate_info where user_name = #{user_name} 
+    </select>
+
+    <!-- 根据用户名查询操作信息总数 -->
+    <select id="findTotalOperateInfoNoByMeterNo" parameterType="string"
+            resultType="int">
+        select count(operate_id) from operate_info where meter_no = #{meter_no} 
+    </select>
+    
+    <!-- 根据表号及操作类型查询操作信息总数 -->
+    <select id="findTotalOperateInfoByMeterNoAndOperate_type" parameterType="map"
+            resultType="int">
+        select count(operate_id) from operate_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_no!=null and meter_no!=''">meter_no=#{meter_no}</if>
+            <if test="operate_type!=null and operate_type!=''">and operate_type=#{operate_type}</if> 
+        </trim>
+    </select>
+
+    <!-- 退费 -->
+    <insert id="refund" parameterType="com.joymeter.entity.OperateInfo">
+        insert into
+        operate_info(operate_id,user_name,province,city,district,user_address_area,user_address_community,user_address_building,user_address_unit,user_address_room,contact_info,concentrator_name,meter_model,meter_type,meter_no,fee_type,recharge_money,recharge_amount_m3,recharge_amount_kwh,operate_type,balance,operator_account,recharge_loc,pay_method,isPrint,operate_time)
+        values(#{operate_id},#{user_name},#{province},#{city},#{district},#{user_address_area},#{user_address_community},#{user_address_building},#{user_address_unit},#{user_address_room},#{contact_info},#{concentrator_name},#{meter_model},#{meter_type},#{meter_no},#{fee_type},#{recharge_money},#{recharge_amount_m3},#{recharge_amount_kwh},#{operate_type},#{balance},#{operator_account},#{recharge_loc},#{pay_method},#{isPrint},#{operate_time})
+    </insert>
+
+    <!-- 充值记录：根据条件查询操作信息 -->
+    <select id="findOperateInfo" parameterType="map" resultType="com.joymeter.entity.OperateInfo">
+        select * from meter_user_operate
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="pay_method!=null and pay_method!=''">and pay_method =#{pay_method}</if>
+            <if test="operate_type!=null and operate_type!=''">and operate_type = #{operate_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time &lt;= #{endTime}</if>    
+        </trim>
+        <choose>   
+            <when test="pageSize!=0">order by operate_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize==0">order by operate_time desc</when>       
+        </choose>
+    </select>
+	
+    <!-- 充值记录：根据条件查询操作信息总数 -->
+    <select id="findAllOperateInfoNo" parameterType="map"
+            resultType="int">
+        select count(operate_id) from meter_user_operate
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="pay_method!=null and pay_method!=''">and pay_method =#{pay_method}</if>
+            <if test="operate_type!=null and operate_type!=''">and operate_type = #{operate_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time &lt;= #{endTime}</if>  
+        </trim>
+    </select>
+	
+    <!-- 抄表页面：加载需要抄表的用户信息 -->
+    <select id="findUsersToRead" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="contact_info!=null and contact_info!=''">and contact_info =#{contact_info}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+        </trim>
+        order by add_time desc limit #{startNo},#{pageSize}
+    </select>
+	
+    <!-- 抄表页面：加载需要抄表的用户信息 -->
+    <select id="findTotalUsersNoToRead" parameterType="map" resultType="int">
+        select count(user_id) from meter_user
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="contact_info!=null and contact_info!=''">and contact_info =#{contact_info}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+        </trim>
+    </select>
+	
+    <!-- 抄表管理：查询小区内的用户总数 -->
+    <select id="findTotalUsersByCommunityName" parameterType="string" resultType="int">
+        select count(user_id) from meter_user where user_address_community = #{community_name}
+    </select>
+	
+    <!-- 一键抄表：查询小区的用户信息 -->
+    <select id="findUsersByCommunity" parameterType="string" resultType="com.joymeter.entity.User">
+        select * from meter_user where user_address_community = #{community_name}
+    </select>
+	
+    <!-- 一键抄表：根据集中器名称查询集中器信息 -->
+    <select id="findConcentrator" parameterType="String"
+            resultType="com.joymeter.entity.Concentrator">
+        select * from concentrator where concentrator_name = #{concentrator_name}
+    </select>
+    
+    <!-- 一键抄表：根据集中器编号查询集中器信息 -->
+    <select id="findConcentrators" parameterType="String"
+            resultType="com.joymeter.entity.Concentrator">
+        select * from concentrator where concentrator_no = #{concentrator_no}
+    </select>
+    
+    <!-- 根据集中器名称查询集中器信息 -->
+    <select id="findConcentratorNameByMeterNo" parameterType="String" resultType="String">
+        select concentrator_name from meter_user where meter_no = #{meter_no}
+    </select>
+    
+    <!-- 更新集中器信息-->
+    <update id="updateConcentrators" parameterType="com.joymeter.entity.Concentrator">
+        update concentrator set concentrator_model= #{concentrator_model} where concentrator_no = #{concentrator_no}
+    </update>
+    
+    <!-- 抄表处理：根据用户名查询该用户电表表号 -->
+    <select id="findUserByRoomId" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="roomId!=null and roomId!=''">user_address_room = #{roomId}</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name = #{supplier_name}</if>
+        </trim>
+    </select>
+
+    <!-- 抄表管理：根据表号查询用户信息 -->
+    <select id="findUserByMeterNo" parameterType="String" resultType="com.joymeter.entity.User">
+        select * from meter_user where meter_no = #{meter_no}
+    </select>
+    
+    <!-- 抄表管理：根据阀门号查询用户信息 -->
+    <select id="findUserByValveNo" parameterType="String" resultType="com.joymeter.entity.User">
+        select * from meter_user where valve_no = #{valve_no}
+    </select>
+    
+    <!-- 抄表管理：根据费率名称查询费率信息 -->
+    <select id="findFeeTypeByName" parameterType="string" resultType="com.joymeter.entity.FeeType">
+        select * from fee_type where feeTypeName = #{feeTypeName} 
+    </select>
+
+    <!-- 抄表管理：根据抄表返回的表号，查询该表的上次消耗量 -->
+    <select id="findLastReadInfoByMeterNo" parameterType="String" resultType="com.joymeter.entity.ReadInfo">
+        select * from read_info where meter_no = #{meter_no} and exception = '1' and isAutoClear != '10' order by info_id desc limit 1
+    </select>
+
+    <!-- 抄表管理：添加扣费后的抄表记录 -->
+    <insert id="saveReadInfo" useGeneratedKeys="true" keyProperty="info_id" parameterType="com.joymeter.entity.ReadInfo">
+        insert into
+        read_info(operate_id,user_name,user_address_area,user_address_community,
+        community_no,user_address_building,user_address_unit,user_address_room,contact_info,
+        concentrator_name,meter_no,fee_type,this_read,last_read,this_cost,last_cost,
+        fee_need,balance,exception,fee_status,read_type,operator_account,operate_time,user_address,
+        operate_day,operate_dayTime,meter_type,data2,data3,data4,data5,data6,data7,data8,data9,isAutoClear,
+        supplier_name)
+        values(#{operate_id},#{user_name},#{user_address_area},#{user_address_community},
+        #{community_no},#{user_address_building},#{user_address_unit},
+        #{user_address_room},#{contact_info},#{concentrator_name},#{meter_no},
+        #{fee_type},#{this_read},#{last_read},#{this_cost},#{last_cost},#{fee_need},
+        #{balance},#{exception},#{fee_status},#{read_type},#{operator_account},
+        #{operate_time},#{user_address},#{operate_day},#{operate_dayTime},#{meter_type},
+        #{data2},#{data3},#{data4},#{data5},#{data6},#{data7},#{data8},#{data9},#{isAutoClear},
+        #{supplier_name})
+    </insert>
+    
+    <!-- 抄表管理：添加抄表异常的可疑抄表记录 -->
+    <insert id="saveDoubtfulReadInfo" parameterType="java.util.List">
+        insert into read_info_doubtful(operate_id,user_name,user_address_area,user_address_community,
+        user_address_building,user_address_unit,user_address_room,contact_info,
+        concentrator_name,meter_no,fee_type,this_read,last_read,this_cost,last_cost,
+        fee_need,balance,exception,fee_status,read_type,operator_account,operate_time,user_address,
+        operate_day,operate_dayTime,meter_type,data2,data3,data4,data5,data6,data7,data8,data9,isAutoClear)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >
+            (#{item.operate_id},#{item.user_name},#{item.user_address_area},
+            #{item.user_address_community},#{item.user_address_building},
+            #{item.user_address_unit},#{item.user_address_room},#{item.contact_info},
+            #{item.concentrator_name},#{item.meter_no},#{item.fee_type},#{item.this_read},
+            #{item.last_read},#{item.this_cost},#{item.last_cost},#{item.fee_need},#{item.balance},
+            #{item.exception},#{item.fee_status},#{item.read_type},#{item.operator_account},
+            #{item.operate_time},#{item.user_address},#{item.operate_day},#{item.operate_dayTime},
+            #{item.meter_type},#{item.data2},#{item.data3},#{item.data4},#{item.data5},
+            #{item.data6},#{item.data7},#{item.data8},#{item.data9},#{item.isAutoClear})
+        </foreach>
+    </insert>
+    
+    <!-- 阀门操作：根据表号查询阀门编号 -->
+    <select id="findValveNoByMeterNo" parameterType="String" resultType="String">
+        select valve_no from meter_user where meter_no = #{meter_no}
+    </select>
+    
+    <!-- 抄表管理：更新阀门状态 -->
+    <update id="updateValveStatus" parameterType="map">
+        update meter_user set valve_status = #{status_no} where valve_no = #{valve_no}
+    </update>
+    
+    <!-- 抄表管理：查询阀门操作记录 -->
+    <select id="findValveStatus" parameterType="Date"
+            resultType="com.joymeter.entity.ReadInfo">
+        select * from read_info where operate_time &gt;= #{sendTime} and isAutoClear='10'
+    </select>
+	
+    <!-- 抄表管理：定时查询抄表结果 -->
+    <select id="findReadResult" parameterType="Date"
+            resultType="com.joymeter.entity.ReadInfo">
+        select * from  read_info where operate_time &gt;= #{sendTime} and isAutoClear!='10'
+    </select>
+    
+    <!-- 抄表管理：根据操作员账号查询抄表结果 -->
+    <select id="findReadResultByOperator" parameterType="map"
+            resultType="com.joymeter.entity.ReadInfo">
+        select * from  read_info where operate_time &gt;= #{sendTime} 
+        and operator_account = #{accountName} and isAutoClear!='10'
+    </select>
+	  
+    <!-- 抄表管理：根据查询条件，查询抄表记录 -->
+    <select id="findReadInfo" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select * from (select info_id from read_info 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=null and community!=''">and user_address_community =#{community}</if>
+            <if test="building!=null and building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=null and unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=null and meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time &lt;= #{endTime}</if>
+            <if test="true">and isAutoClear != '10'</if>
+        </trim>   
+        <choose>
+            <when test="pageSize!=0 and pageSize!=null">order by info_id desc limit #{startNo}, #{pageSize}) as a left join read_info b on a.info_id = b.info_id</when>
+            <otherwise>) as a left join read_info b on a.info_id = b.info_id order by a.info_id desc</otherwise>       
+        </choose>
+    </select>
+  
+    <!-- 抄表管理：根据查询条件，查询抄表记录 -->
+    <select id="findReadInfoCurrent" parameterType="map" resultType="com.joymeter.entity.ReadInfo">      
+        select meter_no,
+        max(info_id) as info_id,
+        operate_id,
+        max(user_name) as user_name,
+        user_address_area,user_address,
+        community_no,
+        max(user_address_community) as user_address_community,
+        max(user_address_building) as user_address_building,
+        max(user_address_unit) as user_address_unit,
+        max(user_address_room) as user_address_room,
+        max(contact_info) as contact_info,
+        max(concentrator_name) as concentrator_name,
+        max(fee_type) as fee_type,
+        max(this_read) as this_read,
+        last_read,
+        this_cost,
+        last_cost,fee_need,balance,exception,fee_status,
+        read_type,pay_remind,
+        sum(data8) as data8,
+        max(operator_account) as operator_account,
+        max(operate_time) as operate_time,
+        operate_day,operate_dayTime,meter_type,data2,
+        data3,data4,data5,data6,data7,data9,isAutoClear
+        from read_info 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=null and community!=''">and user_address_community =#{community}</if>
+            <if test="building!=null and building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=null and unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=null and meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time &lt;= #{endTime}</if>
+            <if test="minBalance!=null and minBalance!=''">and balance &gt;= #{minBalance}</if>
+            <if test="maxBalance!=null and maxBalance!=''">and balance &lt;= #{maxBalance}</if>
+            <if test="true">and isAutoClear != '10'</if>
+        </trim>   
+        group by meter_no 
+        <choose>   
+            <when test="pageSize!=0 and pageSize!=null">order by operate_time desc limit #{startNo},#{pageSize}</when>
+            <otherwise>order by operate_time desc</otherwise>       
+        </choose>  
+    </select>
+    
+    <!-- 查询公摊量 -->
+    <select id="findReadInfoSumData8" parameterType="string" resultType="double">      
+        select sum(data8) as data8 from read_info where meter_no =#{meter_no}
+    </select>
+    
+    <!-- 抄表管理：根据查询条件，查询抄表记录 -->
+    <select id="findTotalReadInfoCurrent" parameterType="map" resultType="int">
+        select count(*) from(select meter_no from read_info 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=null and community!=''">and user_address_community =#{community}</if>
+            <if test="building!=null and building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=null and unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=null and meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time &gt;= #{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time &lt;= #{endTime}</if>
+            <if test="true">and isAutoClear != '10'</if>
+        </trim>   
+        group by meter_no 
+        order by operate_time desc) read_info
+    </select>
+    
+    <!-- 抄表管理：根据查询条件，查询抄表失败记录 -->
+    <select id="findReadInfoFail" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select * from meter_user_read_fail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=null and meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time&gt;=#{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time&lt;=#{endTime}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>    
+        <choose>   
+            <when test="pageSize!=0">order by operate_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize==0">order by operate_time desc</when>       
+        </choose>
+    </select>
+    
+    <!-- 抄表管理：根据查询条件，查询抄表可疑记录 -->
+    <select id="findReadInfoDoubtful" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select * from meter_user_read_doubtful
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=null and meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time&gt;=#{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time&lt;=#{endTime}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>    
+        <choose>   
+            <when test="pageSize!=0">order by operate_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize==0">order by operate_time desc</when>       
+        </choose>
+    </select>
+    
+    <!-- 抄表管理：根据查询条件，查询抄表记录总数 -->
+    <select id="findReadInfoTotal" parameterType="map" resultType="int">
+        select count(info_id) from read_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=null and community!=''">and user_address_community =#{community}</if>
+            <if test="building!=null and building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=null and unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=null and operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=null and meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time&gt;=#{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time&lt;=#{endTime}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+    </select>
+    
+    <!-- 抄表管理：根据查询条件，查询抄表失败记录总数 -->
+    <select id="findTotalReadInfoNoFail" parameterType="map" resultType="int">
+        select count(info_id) from meter_user_read_fail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time&gt;=#{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time&lt;=#{endTime}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+    </select>
+    
+    <!-- 抄表管理：根据查询条件，查询抄表可疑记录总数 -->
+    <select id="findTotalReadInfoNoDoubtful" parameterType="map" resultType="int">
+        select count(info_id) from meter_user_read_doubtful
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="fee_type!=null and fee_type!=''">and fee_type =#{fee_type}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="startTime!=null and startTime!=''">and operate_time&gt;=#{startTime}</if>
+            <if test="endTime!=null and endTime!=''">and operate_time&lt;=#{endTime}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+    </select>
+    
+    <!-- 抄表管理：按年或月份查询抄表记录 -->
+    <select id="findReadInfoMonthly" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select * from read_info 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+        order by operate_time desc limit #{startNo},#{pageSize}
+    </select>
+    
+    <!-- 抄表管理：按照年份查询每月能耗综合 -->
+    <select id="findTotalPowerMonthly" parameterType="map" resultType="double"> 
+        select sum(this_cost) as cost
+        from read_info
+        where DATE_FORMAT(operate_day,'%Y')=#{year} and DATE_FORMAT(operate_day,'%m')=#{month} and meter_no =#{meter_no}
+        group by DATE_FORMAT(operate_day,'%Y-%m')
+        order by DATE_FORMAT(operate_day,'%Y-%m')
+    </select>
+    
+    <!-- 抄表管理：按年或月份查询抄表记录 -->
+    <select id="findReadInfoCurrentMonthly" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select meter_no,
+        max(info_id) as info_id,
+        max(user_name) as user_name,
+        max(user_address_community) as user_address_community,
+        max(user_address_building) as user_address_building,
+        max(user_address_unit) as user_address_unit,
+        max(user_address_room) as user_address_room,
+        max(contact_info) as contact_info,
+        max(concentrator_name) as concentrator_name,
+        max(fee_type) as fee_type,
+        max(this_read) as this_read,      
+        max(operator_account) as operator_account,
+        max(operate_time) as operate_time
+        from read_info 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+        group by meter_no
+        order by operate_time desc limit #{startNo},#{pageSize}
+      
+    </select>
+    
+    <!-- 抄表管理：按年或月份查询抄表记录 -->
+    <select id="findTotalReadInfoCurrentMonthly" parameterType="map" resultType="int">
+        select count(*) from(select meter_no from read_info 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+        group by meter_no
+        order by operate_time desc limit #{startNo},#{pageSize}) read_info
+    </select>
+    
+    <!-- 抄表失败管理：按年或月份查询抄表失败记录 -->
+    <select id="findReadInfoMonthlyFail" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select * from meter_user_read_fail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+        order by operate_time desc limit #{startNo},#{pageSize}
+    </select>
+    
+    <!-- 抄表可疑管理：按年或月份查询抄表可疑记录 -->
+    <select id="findReadInfoMonthlyDoubtful" parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select * from meter_user_read_doubtful
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+        order by operate_time desc limit #{startNo},#{pageSize}
+    </select>
+    
+    <!-- 抄表管理：按年或月份查询抄表记录总数 -->
+    <select id="findTotalReadInfoNoMonthly" parameterType="map" resultType="int">
+        select count(info_id) from read_info
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+    </select>
+    
+    <!-- 抄表失败管理：按年或月份查询抄表失败记录总数 -->
+    <select id="findTotalReadInfoNoMonthlyFail" parameterType="map" resultType="int">
+        select count(info_id) from meter_user_read_fail
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+    </select>
+    
+    <!-- 抄表可疑管理：按年或月份查询抄表可疑记录总数 -->
+    <select id="findTotalReadInfoNoMonthlyDoubtful" parameterType="map" resultType="int">
+        select count(info_id) from meter_user_read_doubtful
+        <trim prefix="where" prefixOverrides="and">
+            <if test="month=='all'">year(operate_time) = year(now())</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="month!='all'">date_format(operate_time,'%Y-%m') =#{month}</if>
+            <if test="meter_type!=''">and meter_type =#{meter_type}</if>
+            <if test="true">and isAutoClear!='10'</if>
+        </trim>
+    </select>
+    
+    <!-- 抄表管理：查询抄表失败的信息 -->
+    <select id="queryReadInfoFailed" parameterType="String" resultType="com.joymeter.entity.ReadInfo">
+        select * from read_info_fail where meter_no =#{meter_no}
+    </select>    
+        
+    <!-- 抄表管理：删除抄表失败记录表中上次失败的记录 -->
+    <update id="delReadInfoFailed" parameterType="String">
+        delete from read_info_fail where meter_no =#{meter_no}
+    </update>   
+    
+    <!-- 抄表管理：删除抄表失败记录 -->
+    <update id="delReadInfoFail">
+        delete from read_info_fail
+    </update>   
+        
+    <!-- 抄表管理：保存抄表失败的记录 -->
+    <insert id="saveReadInfoFailed" parameterType="com.joymeter.entity.ReadInfo">
+        insert into
+        read_info_fail(operate_id,user_name,user_address_area,user_address_community,
+        user_address_building,user_address_unit,user_address_room,contact_info,
+        concentrator_name,meter_no,fee_type,this_read,last_read,this_cost,last_cost,
+        fee_need,balance,exception,fee_status,read_type,operator_account,
+        user_address,operate_day,operate_dayTime,meter_type,data2,data3,
+        data4,data5,data6,data7,data8,data9,isAutoClear)
+        values(#{operate_id},#{user_name},#{user_address_area},#{user_address_community},
+        #{user_address_building},#{user_address_unit},#{user_address_room},
+        #{contact_info},#{concentrator_name},#{meter_no},#{fee_type},#{this_read},
+        #{last_read},#{this_cost},#{last_cost},#{fee_need},#{balance},#{exception},
+        #{fee_status},#{read_type},#{operator_account},#{user_address},#{operate_day},
+        #{operate_dayTime},#{meter_type},#{data2},#{data3},#{data4},#{data5},
+        #{data6},#{data7},#{data8},#{data9},#{isAutoClear})
+    </insert>
+	
+    <!-- 更新账户金额 -->
+    <update id="updateBalance" parameterType="map">
+        update meter_user set last_balance = #{this_balance}, last_read_time = #{last_read_time}
+        where user_id = #{user_id}
+    </update>
+    
+    <update id="updateWechatBalance" parameterType="map">
+        update meter_user set  last_read_time = #{last_read_time}
+        where user_id = #{user_id}
+    </update>
+	
+    <!-- 抄表管理：删除上次抄表参数 --> 
+    <update id="deletePreReadParameter" parameterType="String">
+        delete from read_parameter where parameter_id =#{parameter_id}
+    </update>
+	
+    <!-- 抄表管理：保存抄表参数 -->
+    <insert id="saveReadParameter" parameterType="com.joymeter.entity.ReadParameter">
+        insert into
+        read_parameter(parameter_id,day,hour,minute,second,balance_warn,valve_close,isAutoRead,isAutoInform)
+        values(#{parameter_id},#{day},#{hour},#{minute},#{second},#{balance_warn},#{valve_close},#{isAutoRead},#{isAutoInform})
+    </insert>
+	
+    <!-- 抄表管理：查询抄表参数 --> 
+    <select id="findReadParameter" resultType="com.joymeter.entity.ReadParameter">
+        select * from read_parameter
+    </select>
+	
+    <!-- 加载需要催缴的用户信息 -->
+    <select id="findUsersRemind" parameterType="map"
+            resultType="com.joymeter.entity.User">
+        select * from meter_user 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="true">and last_balance &lt;0</if>
+        </trim>
+        <choose>   
+            <when test="pageSize!=0"> order by last_read_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize==0">order by last_read_time desc</when>       
+        </choose>      
+    </select>
+	
+    <!-- 加载需要催缴的用户信息总数 -->
+    <select id="findTotalUsersNoRemind" parameterType="map"
+            resultType="int">
+        select count(user_id) from meter_user 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="user_name!=null and user_name!=''">user_name like concat('%',#{user_name},'%')</if>
+            <if test="supplier_name!=null and supplier_name!=''">and supplier_name =#{supplier_name}</if>
+            <if test="community!=''">and user_address_community =#{community}</if>
+            <if test="building!=''">and user_address_building =#{building}</if>
+            <if test="unit!=''">and user_address_unit =#{unit}</if>
+            <if test="room!=null and room!=''">and user_address_room =#{room}</if>
+            <if test="operator_name!=''">and operator_account =#{operator_name}</if>
+            <if test="meter_no!=null and meter_no!=''">and meter_no =#{meter_no}</if>
+            <if test="true">and last_balance &lt;0</if>
+        </trim>
+    </select>
+	
+    <!-- 抄表管理：查询当前用户余额 -->
+    <select id="findBalanceByMeterNo" parameterType="String"
+            resultType="double">
+        select last_balance from meter_user where meter_no =#{meter_no}
+    </select>
+	
+    <!-- 抄表管理：添加催缴标记 -->
+    <update id="markup" parameterType="String">
+        update meter_user set pay_remind = '1' where meter_no=#{meter_no}
+    </update>
+	
+    <!-- 抄表管理：取消催缴标记 -->
+    <update id="delMarkup" parameterType="String">
+        update meter_user set pay_remind = '0' where meter_no=#{meter_no}
+    </update>
+
+    <!-- 用户管理：注册用户 -->
+    <insert id="regist" parameterType="com.joymeter.entity.User">
+        insert into
+        meter_user(user_name,province,city,district,user_address_area,user_address_community,user_address_building,user_address_unit,user_address_room,user_address_original_room,concentrator_name,supplier_name,contact_info,id_card_no,house_area,coefficient_name,meter_type,meter_model,protocol_type,valve_protocol,fee_type,meter_no,submeter_no,valve_no,auto_deduction,meter_status,user_status,operator_account,pay_type,initing_data,online_synv_code)
+        values(#{user_name},#{province},#{city},#{district},#{user_address_area},#{user_address_community},#{user_address_building},#{user_address_unit},#{user_address_room},#{user_address_original_room},#{concentrator_name},#{supplier_name},#{contact_info},#{id_card_no},#{house_area},#{coefficient_name},#{meter_type},#{meter_model},#{protocol_type},#{valve_protocol},#{fee_type},#{meter_no},#{submeter_no},#{valve_no},#{auto_deduction},#{meter_status},#{user_status},#{operator_account},#{pay_type},#{initing_data},#{online_synv_code})
+    </insert>
+	
+    <!-- 用户管理：导入用户 -->
+    <insert id="insertUsers" parameterType="com.joymeter.entity.User">
+        insert into
+        meter_user(user_name,province,city,district,user_address_area,user_address_community,user_address_building,user_address_unit,user_address_room,user_address_original_room,concentrator_name,supplier_name,contact_info,id_card_no,house_area,coefficient_name,meter_type,meter_model,protocol_type,fee_type,meter_no,submeter_no,valve_no,auto_deduction,meter_status,user_status,operator_account)
+        values(#{user_name},#{province},#{city},#{district},#{user_address_area},#{user_address_community},#{user_address_building},#{user_address_unit},#{user_address_room},#{user_address_original_room},#{concentrator_name},#{supplier_name},#{contact_info},#{id_card_no},#{house_area},#{coefficient_name},#{meter_type},#{meter_model},#{protocol_type},#{fee_type},#{meter_no},#{submeter_no},#{valve_no},#{auto_deduction},#{meter_status},#{user_status},#{operator_account})
+    </insert>
+	
+    <!-- 根据管理员id查找管理员 -->
+    <select id="checkMeterNoExist" parameterType="String" resultType="com.joymeter.entity.User">
+        select * from meter_user where meter_no = #{meter_no}
+    </select>
+	
+    <!-- 查询全部小区信息 -->
+    <select id="findAllCommunities" parameterType="map" resultType="com.joymeter.entity.Community">
+        select * from community 
+        where province=#{province} and city=#{city} and district=#{district}
+    </select>
+    
+    <!-- 用户管理：查询用户换表操作的时间 -->
+    <select id="findOperateTime" parameterType="String"
+            resultType="com.joymeter.entity.UserManageInfo">
+        select * from user_manage_info where meter_no=#{meter_no}
+    </select>
+	
+    <select id="queryOperateTime" parameterType="String"
+            resultType="com.joymeter.entity.UserManageInfo">
+        select * from user_manage_info where new_meter_no=#{meter_no}
+    </select>
+
+    <!-- 用户管理：添加换表或销户记录 -->
+    <insert id="addManageInfo" parameterType="com.joymeter.entity.UserManageInfo">
+        insert into
+        user_manage_info(user_name,meter_no,new_meter_no,province,city,district,user_address,contact_info,info_content,operator_account,closingCost)
+        values(#{user_name},#{meter_no},#{new_meter_no},#{province},#{city},#{district},#{user_address},#{contact_info},#{info_content},#{operator_account},#{closingCost})
+    </insert>
+
+    <!-- 用户管理：更新用户的表状态或用户状态 -->
+    <update id="updateStatus" parameterType="map">
+        update meter_user
+        <set>
+            <if test="user_status!=null">user_status=#{user_status},</if>
+            <if test="meter_status!=null">meter_status=#{meter_status}</if>
+        </set>
+        where meter_no=#{meter_no}
+    </update>
+	
+    <!-- 用户管理：拆表结算后，更新用户的账户状态 -->
+    <update id="updateAccount" parameterType="map">
+        update meter_user set last_balance =#{last_balance}
+        where meter_no=#{meter_no}
+    </update>
+
+    <!-- 用户管理：修改费率类型 -->
+    <update id="changeFeeType" parameterType="map">
+        update meter_user set fee_type=#{fee_type}
+        where user_name = #{user_name} and id_card_no =#{id_card_no}
+    </update>
+	
+    <!-- 用户管理：保存费率修改信息 -->
+    <insert id="saveChangeFeeTypeInfo" parameterType="map">
+        insert into manage_info(user_name,meter_no,info_content,operator_account)
+        values(#{user_name},#{meter_no},#{info_content},#{operator_account})
+    </insert>
+
+    <!-- 用户管理：修改用户信息 -->
+    <update id="modifyUserInfo" parameterType="com.joymeter.entity.User">
+        update meter_user set
+        user_name=#{user_name},
+        province=#{province},
+        city=#{city},
+        district=#{district},
+        user_address_area=#{user_address_area},
+        user_address_community=#{user_address_community},
+        user_address_building=#{user_address_building},
+        user_address_unit=#{user_address_unit},
+        user_address_room=#{user_address_room},
+        user_address_original_room=#{user_address_original_room},
+        concentrator_name=#{concentrator_name},
+        supplier_name=#{supplier_name},
+        contact_info=#{contact_info},
+        id_card_no=#{id_card_no},
+        meter_type=#{meter_type},
+        meter_model=#{meter_model},
+        protocol_type=#{protocol_type},
+        valve_protocol=#{valve_protocol},
+        meter_no=#{meter_no},
+        submeter_no=#{submeter_no},
+        valve_no=#{valve_no},
+        operator_account=#{operator_account},
+        pay_type=#{pay_type},
+        initing_data=#{initing_data}
+        where user_id=#{user_id}
+    </update>
+
+    <!-- 用户管理：修改原房间号信息 -->
+    <update id="updateRoom" parameterType="com.joymeter.entity.User">
+        update meter_user set
+        meter_no=#{meter_no},
+        user_address_room=#{user_address_room},
+        operator_account=#{operator_account}
+        where user_id=#{user_id}
+    </update>
+    
+    <!-- 用户管理：批量删除用户信息 -->
+    <update id="removeUser" parameterType="java.util.List">
+        delete from meter_user where user_id in
+        <foreach collection="array" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}   
+        </foreach>
+    </update>
+    
+    <!-- 用户管理：删除用户时，查询所有删除用户的表号 -->
+    <select id="findMeterNosByUserIDs" parameterType="java.util.List" 
+            resultType="string">
+        select meter_no from meter_user where user_id in
+        <foreach collection="array" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+    
+    <!-- 用户管理：批量删除用户时，删除相应的抄表失败记录 -->
+    <update id="removeReadInfoFailedByMeterNos" parameterType="java.util.List">
+        delete from read_info_fail where meter_no in
+        <foreach collection="array" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}   
+        </foreach>
+    </update>
+    
+    <!-- 用户管理：批量删除用户时，删除相应的房源信息记录 -->
+    <update id="removeRoomInfoByMeterNos" parameterType="java.util.List">
+        delete from room_info where meterNo in
+        <foreach collection="array" index="index" item="item" open="("
+                 separator="," close=")">
+            #{item}   
+        </foreach>
+    </update>
+	
+    <!-- 用户管理：查找操作记录 -->
+    <select id="findUserManageInfo" parameterType="string"
+            resultType="com.joymeter.entity.SysLog">
+        select * from syslog where userName=#{user_name}
+    </select>
+
+    <!-- 加载网点列表 -->
+    <select id="loadSuppliers" parameterType="map" 
+            resultType="com.joymeter.entity.WaterSupplier">
+        select * from supplier
+        <choose>   
+            <when test="pageSize!=0">order by add_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize==0">order by add_time</when>       
+        </choose>
+    </select>
+    
+    <select id="findSuppliersNo" resultType="int">
+        select count(supplier_id) from supplier
+    </select>
+
+    <!-- 修改网点信息 -->
+    <update id="saveWaterSupplier" parameterType="com.joymeter.entity.WaterSupplier">
+        update supplier set
+        supplier_name=#{supplier_name},province=#{province},city=#{city},
+        district=#{district},supplier_address=#{supplier_address},
+        add_time=#{add_time},operator_name=#{operator_name}
+        where supplier_id = #{supplier_id}
+    </update>
+
+    <!-- 删除网点信息 -->
+    <update id="delWaterSupplier" parameterType="int">
+        delete from supplier
+        where supplier_id = #{supplier_id}
+    </update>
+
+    <!-- 添加供水网点 -->
+    <insert id="addWaterSupplier" parameterType="com.joymeter.entity.WaterSupplier">
+        insert into
+        supplier(supplier_name,province,city,district,supplier_address,operator_name)
+        values(#{supplier_name},#{province},#{city},#{district},#{supplier_address},#{operator_name})
+    </insert>
+
+    <!-- 加载小区列表 -->
+    <select id="loadCommunity" resultType="com.joymeter.entity.Community">
+        select * from community order by add_time desc
+    </select>
+
+    <!-- 添加小区 -->
+    <insert id="addCommunity" parameterType="com.joymeter.entity.Community">
+        insert into
+        community(province,city,district,community_no,community_name,operator_account)
+        values(#{province},#{city},#{district},#{community_no},#{community_name},#{operator_account})
+    </insert>
+
+    <!-- 修改小区 -->
+    <update id="modifyCommunity" parameterType="map">
+        update community set
+        province =#{new_province},
+        city =#{new_city},
+        district =#{new_district},
+        community_name=#{new_community_name},
+        community_no=#{new_community_no}
+        where community_id=#{community_id}
+    </update>
+	
+    <!-- 修改用户的小区信息 -->
+    <update id="changeCommunity" parameterType="map">
+        update meter_user set
+        user_address_community=#{new_community_name}
+        where user_address_community=#{community_name}
+    </update>
+    
+    <!-- 修改集中器的小区信息 -->
+    <update id="changeConcentrator" parameterType="map">
+        update concentrator set
+        user_address_community=#{new_community_name}
+        where user_address_community=#{community_name}
+    </update>
+	
+    <!-- 删除之前，检查使用情况 -->
+    <select id="checkCommunity" parameterType="string" resultType="int"> 
+        select count(user_id) from meter_user where user_address_community =#{community_name}
+    </select>
+
+    <!-- 删除小区 -->
+    <update id="delCommunity" parameterType="map">
+        delete from community where province=#{province} and city=#{city} 
+        and district=#{district} and community_name=#{community_name}
+    </update>
+
+    <!-- 加载楼栋列表 -->
+    <select id="loadBuilding" parameterType="map"
+            resultType="com.joymeter.entity.Building">
+        select * from building 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="province!=''">province=#{province}</if>
+            <if test="city!=''">and city=#{city}</if>
+            <if test="district!=''">and district=#{district}</if>
+            <if test="community_name!=''">and community_name=#{community_name}</if>
+        </trim>
+    </select>
+
+    <!-- 修改楼栋信息 -->
+    <update id="modifyBuilding" parameterType="map">
+        update building
+        <trim prefix="set" prefixOverrides=",">
+            <if test="new_community_name!=null">community_name=#{new_community_name}</if>
+            <if test="new_building_name!=null">,building_name=#{new_building_name}</if>
+        </trim>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="community_name!=null">community_name=#{community_name}</if>
+            <if test="building_name!=null">and building_name=#{building_name}</if>
+            <if test="province!=null">and province=#{province}</if>
+            <if test="city!=null">and city=#{city}</if>
+            <if test="district!=null">and district=#{district}</if>
+        </trim>
+    </update>
+
+    <!-- 删除楼栋信息 -->
+    <update id="delBuilding" parameterType="map">
+        delete from building
+        <where>
+            <if test="province!=null">and province=#{province}</if>
+            <if test="city!=null">and city=#{city}</if>
+            <if test="district!=null">and district=#{district}</if>
+            <if test="commmunity_name!=null">community_name=#{community_name}</if>
+            <if test="building_name!=null">and building_name=#{building_name}</if>
+        </where>
+    </update>
+
+    <!-- 新增楼栋信息 -->
+    <insert id="addBuilding" parameterType="com.joymeter.entity.Building">
+        insert into
+        building(province,city,district,community_name,building_name,operator_account)
+        values(#{province},#{city},#{district},#{community_name},#{building_name},#{operator_account})
+    </insert>
+
+    <!-- 加载单元列表 -->
+    <select id="loadUnit" parameterType="map" resultType="com.joymeter.entity.Unit">
+        select * from unit 
+        <where>
+            <if test="province!=''">and province=#{province}</if>
+            <if test="city!=''">and city=#{city}</if>
+            <if test="district!=''">and district=#{district}</if>
+            <if test="commmunity_name!=''">and community_name=#{community_name}</if>
+            <if test="building_name!=''">and building_name=#{building_name}</if>
+        </where>
+    </select>
+
+    <!-- 修改单元信息 -->
+    <update id="modifyUnit" parameterType="map">
+        update unit
+        <trim prefix="set" prefixOverrides=",">
+            <if test="new_community_name!=null">community_name=#{new_community_name}</if>
+            <if test="new_building_name!=null">,building_name=#{new_building_name}</if>
+            <if test="new_unit_name!=null">,unit_name=#{new_unit_name}</if>
+        </trim>
+        <trim prefix="where" prefixOverrides="and">
+            <if test="community_name!=null">community_name=#{community_name}</if>
+            <if test="building_name!=null">and building_name=#{building_name}</if>
+            <if test="unit_name!=null">and unit_name=#{unit_name}</if>
+            <if test="province!=null">and province=#{province}</if>
+            <if test="city!=null">and city=#{city}</if>
+            <if test="district!=null">and district=#{district}</if>
+        </trim>
+    </update>
+
+    <!-- 删除单元信息 -->
+    <update id="delUnit" parameterType="map">
+        delete from unit
+        <where>
+            <if test="community_name!=null">community_name=#{community_name}</if>
+            <if test="building_name!=null">and building_name=#{building_name}</if>
+            <if test="unit_name!=null">and unit_name=#{unit_name}</if>
+            <if test="province!=null">and province=#{province}</if>
+            <if test="city!=null">and city=#{city}</if>
+            <if test="district!=null">and district=#{district}</if>
+        </where>
+    </update>
+
+    <!-- 新增单元信息 -->
+    <insert id="addUnit" parameterType="com.joymeter.entity.Unit">
+        insert into
+        unit(province,city,district,community_name,building_name,unit_name,operator_account)
+        values(#{province},#{city},#{district},#{community_name},#{building_name},#{unit_name},#{operator_account})
+    </insert>
+    
+    <!-- 查找所有集中器 -->
+    <select id="findAllConcentrators" resultType="com.joymeter.entity.Concentrator">
+        select * from concentrator
+    </select>
+
+    <!-- 加载集中器列表 -->
+    <select id="loadConcentrators" parameterType="map" resultType="com.joymeter.entity.Concentrator">
+        select * from concentrator
+        <where>
+            <if test="community_name!=''">user_address_community=#{community_name}</if>
+            <if test="building_name!=''">and user_address_building=#{building_name}</if>
+            <if test="unit_name!=''">and user_address_unit=#{unit_name}</if>
+        </where>
+        <choose>
+            <when test="pageSize!=0">order by add_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize=0">order by add_time desc</when>
+        </choose> 
+    </select>
+    
+    <!-- 查询集中器数量 -->
+    <select id="findConcentratorNo" resultType="int">
+        select count(concentrator_id) from concentrator
+    </select>
+    
+    <!-- 更新集中器状态 -->
+    <update id="updateMbusStatus" parameterType="map">
+        update concentrator set concentrator_state = #{mbus_status} 
+        where concentrator_no = #{mbus_id}
+    </update>
+
+    <!-- 修改集中器信息 -->
+    <update id="modifyConcentrator" parameterType="com.joymeter.entity.Concentrator">
+        update
+        concentrator set
+        concentrator_name=#{concentrator_name},concentrator_no=#{concentrator_no},gateway_id=#{gateway_id},concentrator_ip=#{concentrator_ip},concentrator_port=#{concentrator_port},DTU_sim_no=#{DTU_sim_no},concentrator_model=#{concentrator_model},user_address_community=#{user_address_community},user_address_building=#{user_address_building},user_address_unit=#{user_address_unit},operator_account=#{operator_account}
+        where concentrator_id = #{concentrator_id}
+    </update>
+
+    <!-- 检查集中器是否处于使用状态 -->
+    <select id="findConcentratorStatus" parameterType="string" resultType="int">
+        select count(user_id) from meter_user
+        where concentrator_name = #{concentrator_name}
+    </select>
+	
+    <!-- 删除集中器信息 -->
+    <update id="delConcentrator" parameterType="int">
+        delete from concentrator where concentrator_id = #{concentrator_id}
+    </update>
+
+    <!-- 添加集中器 -->
+    <insert id="addConcentrator" parameterType="com.joymeter.entity.Concentrator">
+        insert into
+        concentrator(concentrator_name,concentrator_no,gateway_id,concentrator_ip,concentrator_port,DTU_sim_no,user_address_community,user_address_building,user_address_unit,operator_account,concentrator_model)
+        values(#{concentrator_name},#{concentrator_no},#{gateway_id},#{concentrator_ip},#{concentrator_port},#{DTU_sim_no},#{user_address_community},#{user_address_building},#{user_address_unit},#{operator_account},#{concentrator_model})
+    </insert>
+
+    <!-- 加载费率类型 -->
+    <select id="load_feeTypes" resultType="com.joymeter.entity.FeeType">
+        select * from fee_type
+        order by addTime desc
+    </select>
+	
+    <!-- 更新费率类型的使用状态 -->
+    <update id="updateFeeTypeStatus" parameterType="map">
+        update fee_type set feeTypeStatus=#{feeTypeStatus} where feeTypeName=#{feeTypeName}
+    </update>
+
+    <!-- 新增费率类型 -->
+    <insert id="addFeeType" parameterType="com.joymeter.entity.FeeType">
+        insert into
+        fee_type(feeTypeName,meterType,basicUnitPrice,disposingUnitCost,otherCost,
+        totalUnitCost,extraCost,paymentMethod,isLevelPrice,levelOneStartVolume,
+        levelOneUnitPrice,levelOneTotalPrice,levelTwoStartVolume,levelTwoUnitPrice,
+        levelTwoTotalPrice,levelThreeStartVolume,levelThreeUnitPrice,
+        levelThreeTotalPrice,levelFourStartVolume,levelFourUnitPrice,
+        levelFourTotalPrice,levelFiveStartVolume,levelFiveUnitPrice,
+        levelFiveTotalPrice,feeTypeStatus,operatorName)
+        values(#{feeTypeName},#{meterType},#{basicUnitPrice},#{disposingUnitCost},
+        #{otherCost},#{totalUnitCost},#{extraCost},#{paymentMethod},#{isLevelPrice},
+        #{levelOneStartVolume},#{levelOneUnitPrice},#{levelOneTotalPrice},
+        #{levelTwoStartVolume},#{levelTwoUnitPrice},#{levelTwoTotalPrice},
+        #{levelThreeStartVolume},#{levelThreeUnitPrice},#{levelThreeTotalPrice},
+        #{levelFourStartVolume},#{levelFourUnitPrice},#{levelFourTotalPrice},
+        #{levelFiveStartVolume},#{levelFiveUnitPrice},#{levelFiveTotalPrice},
+        #{feeTypeStatus},#{operatorName})
+    </insert>
+	
+    <!-- 查询费率类型 -->
+    <select id="findFeeTypeById" parameterType="int" resultType="com.joymeter.entity.FeeType">
+        select * from fee_type where feeTypeId = #{feeTypeId}
+    </select>
+	
+    <!-- 修改费率类型 -->
+    <update id="modifyFeeType" parameterType="com.joymeter.entity.FeeType">
+        update fee_type set 
+        feeTypeName=#{feeTypeName},meterType=#{meterType},
+        basicUnitPrice=#{basicUnitPrice},disposingUnitCost=#{disposingUnitCost},
+        otherCost=#{otherCost},totalUnitCost=#{totalUnitCost},extraCost=#{extraCost},
+        paymentMethod=#{paymentMethod},isLevelPrice=#{isLevelPrice},
+        levelOneStartVolume=#{levelOneStartVolume},levelOneUnitPrice=#{levelOneUnitPrice},
+        levelOneTotalPrice=#{levelOneTotalPrice},levelTwoStartVolume=#{levelTwoStartVolume},
+        levelTwoUnitPrice=#{levelTwoUnitPrice},levelTwoTotalPrice=#{levelTwoTotalPrice},
+        levelThreeStartVolume=#{levelThreeStartVolume},levelThreeUnitPrice=#{levelThreeUnitPrice},
+        levelThreeTotalPrice=#{levelThreeTotalPrice},levelFourStartVolume=#{levelFourStartVolume},
+        levelFourUnitPrice=#{levelFourUnitPrice},levelFourTotalPrice=#{levelFourTotalPrice},
+        levelFiveStartVolume=#{levelFiveStartVolume},levelFiveUnitPrice=#{levelFiveUnitPrice},
+        levelFiveTotalPrice=#{levelFiveTotalPrice} where feeTypeId=#{feeTypeId}
+    </update>
+    
+    <!-- 修改完费率类型后,同时更新之前费率类型所有的表 -->
+    <update id="modifyMtertUserFeeType" parameterType="map">
+    	update meter_user set fee_type=#{fee_type} where fee_type=#{original_fee_type}
+    </update>
+
+    <!-- 删除费率类型 -->
+    <update id="delFeeType" parameterType="int">
+        delete from fee_type where
+        feeTypeId = #{feeTypeId}
+    </update>
+
+    <!-- 加载户型 -->
+    <select id="load_house_coefficient" resultType="com.joymeter.entity.HouseCoefficient">
+        select * from house_coefficient order by add_time desc
+    </select>
+	
+    <!-- 检查户型类型 -->
+    <select id="checkCoefficient" resultType="int">
+        select count(coefficient_id) from house_coefficient where coefficient_name=#{coefficient_name}
+    </select>
+	
+    <!-- 检查户型系数 -->
+    <select id="findCoefficient" resultType="int">
+        select count(coefficient_id) from house_coefficient where coefficient=#{coefficient}
+    </select>
+
+    <!-- 添加户型 -->
+    <insert id="addCoefficient" parameterType="com.joymeter.entity.HouseCoefficient">
+        insert into
+        house_coefficient(coefficient_name,coefficient,operator_account)
+        values(#{coefficient_name},#{coefficient},#{operator_account})
+    </insert>
+	
+    <!-- 修改户型 -->
+    <update id="modifyCoefficient" parameterType="map">
+        update house_coefficient set
+        coefficient_name=#{coefficient_name},coefficient=#{coefficient
+        where coefficient_id = #{coefficient_id}
+    </update>
+
+    <!-- 删除户型 -->
+    <update id="delCoefficient" parameterType="String">
+        delete from
+        house_coefficient
+        where coefficient_name = #{coefficient_name}
+    </update>
+	
+    <!-- 查询某个行政区的充值记录数量 -->
+    <select id="findRechargeNoByDistrict" parameterType="map" resultType="int">
+        select count(operate_id) from operate_info
+        where operate_type='1' and province=#{province} and city=#{city} and district=#{district}
+    </select>
+	
+    <!-- 查询某个行政区的退费记录数量 -->
+    <select id="findRefundNoByDistrict" parameterType="map" resultType="int">
+        select count(operate_id) from operate_info
+        where operate_type='0' and province=#{province} and city=#{city} and district=#{district}
+    </select>
+	
+    <!-- 查询某个行政区的换表记录数量 -->
+    <select id="findChangeMeterNoByDistrict" parameterType="map" resultType="int">
+        select count(info_id) from user_manage_info
+        where info_content='3' and province=#{province} and city=#{city} and district=#{district}
+    </select>
+	
+    <!-- 查询某个行政区的销户记录数量 -->
+    <select id="findDelUserNoByDistrict" parameterType="map" resultType="int">
+        select count(info_id) from user_manage_info
+        where info_content='6' and province=#{province} and city=#{city} and district=#{district}
+    </select>
+
+    <!-- 系统管理：注册管理员 -->
+    <insert id="adminRegist" parameterType="com.joymeter.entity.Admin">
+        insert into
+        meter_admin(admin_account,admin_name,admin_tel,admin_supplier_name,admin_password,admin_power,account_status,admin_add_time,last_load_time,role_id)
+        values(#{admin_account},#{admin_name},#{admin_tel},#{admin_supplier_name},#{admin_password},#{admin_power},#{account_status},#{admin_add_time},"",#{role_id})
+    </insert>
+	
+    <!-- 根据查询条件，加载管理员 -->
+    <select id="findAdmin" resultType="com.joymeter.entity.Admin">
+        select * from meter_admin order by admin_add_time desc
+		
+    </select>
+	
+    <!-- 删除管理员信息 -->
+    <update id="delAdmin" parameterType="String">
+        delete from meter_admin
+        where admin_account = #{admin_account}
+    </update>
+	
+    <!-- 系统管理：修改管理员信息 -->
+    <update id="modifyAdmin" parameterType="com.joymeter.entity.Admin">
+        update meter_admin set
+        admin_name=#{admin_name},
+        admin_tel=#{admin_tel},
+        admin_supplier_name=#{admin_supplier_name},
+        admin_password=#{admin_password},
+        admin_power=#{admin_power},
+        role_id=#{role_id},
+        account_status=#{account_status}
+        where admin_id=#{admin_id}
+    </update>
+	
+    <!-- 添加操作记录 -->
+    <insert id="setOperate" parameterType="com.joymeter.entity.SysLog">
+        insert into
+        syslog(loginName,userName,operatingcontent,operateDate)
+        values(#{loginName},#{userName},#{operatingcontent},#{operateDate})
+    </insert>
+	
+    <!--加载操作日志-->
+    <select id="findSysLog" resultType="com.joymeter.entity.SysLog">
+        select * from syslog order by operateDate desc	
+    </select>
+	
+    <!--根据操作员账号加载操作日志-->
+    <select id="findLogByAccount" resultType="com.joymeter.entity.SysLog">
+        select * from syslog
+        where loginName=#{admin_account}
+        order by operateDate desc
+    </select>
+	
+    <!-- 更新最近登录时间 -->
+    <update id="updateAdminLoadTime" parameterType="map">
+        update meter_admin set
+        last_load_time=#{operateDate}
+        where admin_account = #{loginAdmin_account}
+    </update>
+	
+    <!-- 根据角色Id查找角色 -->
+    <select id="findRoleById" parameterType="Long" resultType="com.joymeter.entity.Role">
+        select * from role where
+        id =#{role_id}
+    </select>
+	
+    <!-- 查找所有角色 -->
+    <select id="findRole" resultType="com.joymeter.entity.Role">
+        select * from role order by role_add_time desc
+    </select>
+	
+    <!-- 添加角色 -->
+    <insert id="addRole" parameterType="com.joymeter.entity.Role">
+        insert into
+        role(role_name,permission,role_add_time)
+        values(#{role_name},#{permission},#{role_add_time})
+    </insert>
+	
+    <!-- 系统管理：修改角色信息 -->
+    <update id="modifyRole" parameterType="com.joymeter.entity.Role">
+        update role set
+        role_name=#{role_name},
+        permission=#{permission}		
+        where id=#{id}
+    </update>
+	
+    <!-- 删除角色信息 -->
+    <update id="delRoleById" parameterType="Long">
+        delete from role
+        where id = #{id}
+    </update>
+	
+    <!-- 根据id修改管理员联系方式 -->
+    <update id="modifyTelById" parameterType="map">
+        update meter_admin set
+        admin_tel=#{admin_tel}			
+        where admin_id=#{admin_id}
+    </update>
+	
+    <!-- 根据id修改管理员姓名 -->
+    <update id="modifyNameById" parameterType="map">
+        update meter_admin set
+        admin_name=#{admin_name}			
+        where admin_id=#{admin_id}
+    </update>
+	
+    <!-- 根据id修改管理员密码 -->
+    <update id="modifyPasswordById" parameterType="map">
+        update meter_admin set
+        admin_password=#{admin_password}			
+        where admin_id=#{admin_id}
+    </update>
+	
+    <!-- 根据角色名称查找角色 -->
+    <select id="findRoleByName" parameterType="String" resultType="com.joymeter.entity.Role">
+        select * from role where role_name=#{role_name}
+    </select>
+	
+    <!-- 根据管理员id查找管理员 -->
+    <select id="findAdminById" parameterType="Long" resultType="com.joymeter.entity.Admin">
+        select * from meter_admin where admin_id = #{admin_id}
+    </select>
+	
+    <!--根据角色id在管理员中查找使用该角色的管理员-->
+    <select id="findRoleFromAdminById" parameterType="Long" resultType="com.joymeter.entity.Admin">
+        select * from meter_admin
+        where role_id=#{id}
+    </select>
+	
+    <!--语言设置-->
+    <update id="clearLanguage">
+        truncate language
+    </update>
+	
+    <insert id="saveLanguage" parameterType="string">
+        insert into language(language_name)values(#{language})
+    </insert>
+	
+    <!--语言查询-->
+    <select id="findLanguage" resultType="string">
+        select language_name from language
+    </select>
+    
+    <!-- 根据用户地址加载用户信息 -->
+    <select id="findRoomsByAddress" parameterType="map" resultType="String">
+        select distinct user_address_room from meter_user 
+        where user_address_community = #{community_name} 
+        and user_address_building = #{building_name} 
+        and user_address_unit = #{unit_name}
+    </select>
+    
+    <!-- 根据小区编号、房间号、表类型查询表号 -->
+    <select id="findMetersByRoomNo" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user 
+        where user_address_room = #{user_address_room} 
+        and meter_type = #{meter_type} 
+        and user_address_community = (select community_name from community where community_no = #{community_no})
+    </select>
+    
+    <!-- 根据小区名称、房间号、表类型查询表号 -->
+    <select id="findMetersByRoomName" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user 
+        where user_address_room = #{user_address_room} 
+        and meter_type = #{meter_type} 
+        and user_address_community =  #{community_name}
+    </select>
+    
+    <!-- 根据小区编号、房间号、查询用户 -->
+    <select id="findUserByRoom" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user 
+        where user_address_room = #{user_address_room}  
+        and user_address_community = (select community_name from community where community_no = #{community_no})
+    </select>
+    
+    <!-- 根据小区编号 查询用户 -->
+    <select id="findUsersByRoom" parameterType="map" resultType="com.joymeter.entity.User">
+        select * from meter_user 
+        where user_address_community = (select community_name from community where community_no = #{community_no})
+    </select>
+       
+    <!-- 根据小区名称查询小区编号 -->
+    <select id="findCommunityNoByName" parameterType="String" resultType="String">
+        select community_no from community 
+        where community_name = #{community_name} 
+    </select>
+    
+    <!-- 根据小区名称查询小区对象 -->
+    <select id="findCommunityByName" parameterType="String" resultType="com.joymeter.entity.Community">
+        select * from community 
+        where community_name = #{community_name} 
+    </select>
+    
+    <!-- 根据楼栋名称查询其对应的房间号及表号 -->
+    <select id="findRoomAndMeter_noByBulid" parameterType="String" resultType="com.joymeter.entity.User">
+        select * from meter_user where user_address_building = #{buildName}
+    </select>
+    
+    <!-- 注册房源信息 -->
+    <insert id="registRoomInfo" parameterType="java.util.List">
+        insert into room_info(onlineSyncCode,doorType,provinceName,cityName,cityAreaName,
+        streetName,streetAddress,villageName,buildingNumber,unitNumber,houseNumber,roomName,callBackUrl,meterNo)
+        values
+        <foreach collection="list" item="item" index="index" separator="," >    
+            (#{item.onlineSyncCode},#{item.doorType},#{item.provinceName},#{item.cityName},#{item.cityAreaName},#{item.streetName},
+            #{item.streetAddress},#{item.villageName},#{item.buildingNumber},#{item.unitNumber},#{item.houseNumber},#{item.roomName},
+            #{item.callBackUrl},#{item.meterNo})
+        </foreach>  
+    </insert>
+    
+    <!-- 查询未同步的房源信息总数 -->
+    <select id="findTotalRoomInfoNo" resultType="int">
+        select count(roomId) from room_info
+    </select>
+    
+    <!-- 查询未同步的房源信息 -->
+    <select id="findRoomInfo" parameterType="map" resultType="com.joymeter.entity.RoomInfo">
+        select * from room_info where callBackStatus is null or callBackStatus = 1
+        <choose>   
+            <when test="pageSize!=0">order by addTime desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize==0">order by addTime desc</when>       
+        </choose>
+    </select>
+    
+    <!-- 更新房源信息 -->
+    <update id="updateRoomInfo" parameterType="com.joymeter.entity.User">
+        update room_info set meterNo = concat(meterNo, ',' , #{meter_no})
+        where onlineSyncCode = #{user_address_original_room}
+    </update>
+    
+    <!-- 根据房源ID查询房间类型 -->
+    <select id="findRoomInfoByOnlineSyncCode" parameterType="String" resultType="com.joymeter.entity.RoomInfo">
+        select * from room_info where onlineSyncCode = #{onlineSyncCode}
+    </select>
+    
+    <!-- 根据表号查询所属集中器信息 -->
+    <select id="findConcentratorByMeterNo" parameterType="String" 
+            resultType="com.joymeter.entity.Concentrator">
+        select * from concentrator where concentrator_name = 
+        (select concentrator_name from meter_user where meter_no = #{meter_no})
+    </select>
+    
+    <!-- 根据表号查询一段时间内的充值信息 -->
+    <select id="findRechargeInfo" parameterType="map" resultType="com.joymeter.entity.OperateInfo">
+        select * from operate_info where meter_no = #{meterNo}
+        and operate_type = '1' and operate_time between #{startTime} and #{endTime};
+    </select>
+    
+    <!-- 更新用户身份信息 -->
+    <update id="updateOnline_synv_code" parameterType="com.joymeter.entity.User">
+        update meter_user set online_synv_code = #{online_synv_code}
+        where user_id = #{user_id}
+    </update>
+    
+    <!-- 更新回调状态 -->
+    <update id="updateCallBackStatus" parameterType="com.joymeter.entity.RoomInfo">
+        update room_info set callBackStatus = #{callBackStatus}
+        where onlineSyncCode = #{onlineSyncCode}
+    </update>
+    
+    <!-- 查询房源同步失败的数据 -->
+    <select id="findUnCallBackUsers" resultType="com.joymeter.entity.User">
+        select * from meter_user where online_synv_code in (select onlineSyncCode from room_info 
+        where callBackStatus is null or callBackStatus = 1)
+    </select>
+
+    <!-- 自动注册时更新表注册状态 -->
+    <update id="updateRegisterStatus" parameterType="string">
+        update meter_user set register_status = 0 where meter_no = #{meter_no}
+    </update>
+    
+    <!-- 自动注册到SaaS平台失败的数据 -->
+    <select id="findUnregisterUsers" resultType="com.joymeter.entity.User">
+        select * from meter_user where register_status = 1
+    </select>
+    
+    <!-- 查询母表参数 -->
+    <select id="findMotherMeterConf" parameterType="map" resultType="com.joymeter.entity.ParentMeterConf">
+        select * from mother_meter_conf 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_no!='' and meter_no!=null">meter_no=#{meter_no}</if>
+        </trim>
+        <choose>
+            <when test="pageSize!=0">order by add_time desc limit #{startNo},#{pageSize}</when>
+            <when test="pageSize=0">order by add_time desc</when>
+        </choose> 
+    </select>
+    
+    <!-- 查询母表参数共有多少条 -->
+    <select id="findTotalMotherMeterConf" parameterType="map" resultType="int">
+        select count(id) from mother_meter_conf 
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_no!='' and meter_no!=null">meter_no=#{meter_no}</if>
+        </trim>
+    </select>
+    
+    <!-- 更新母表参数配置信息 -->
+    <update id="updateMotherMeterConf" parameterType="com.joymeter.entity.ParentMeterConf">
+        update mother_meter_conf set meter_no=#{meter_no},meter_type=#{meter_type},allot_type=#{allot_type}
+        where id=#{id}
+    </update>
+    
+    <!-- 查询meter_user根据id_card_no -->
+    <select id="findUserByIdCardNo" parameterType="string" resultType="com.joymeter.entity.User">
+        select * from meter_user where id_card_no = #{id_card_no}
+    </select>
+    
+    <!-- 查询meter_user一共有多少只符合查询条件的表 -->
+    <select id="findUserBySubNo" parameterType="string" resultType="com.joymeter.entity.User">
+        select * from meter_user where submeter_no = #{submeter_no}
+    </select>
+    
+    <!-- 更新用户表中的母表信息 -->
+    <update id="updateMotherMeter" parameterType="map">
+        update meter_user set meter_no=#{meter_no},submeter_no=#{meter_no} where submeter_no=#{org_meter_no}
+    </update>
+    
+    <!-- 更新用户表中的普通表信息 -->
+    <update id="updateUserBySubNo" parameterType="map">
+        update meter_user set submeter_no=#{meter_no} where submeter_no=#{org_meter_no}
+    </update>
+
+    <!-- 根据表号更新set token-->
+    <select id="updateSetToken"  parameterType="map">
+        update meter_user set user_address_original_room=#{token} where meter_no=#{meter_no}
+    </select>
+    
+    <!-- 根据表号更新购买次数-->
+    <select id="updateCreditTimes"  parameterType="map">
+        update meter_user set house_area=#{thistimes} where meter_no=#{meter_no}
+    </select>
+    
+    <!-- 添加母表参数配置信息 -->
+    <insert id="addMotherMeterConf" parameterType="com.joymeter.entity.ParentMeterConf">
+        insert into mother_meter_conf(meter_no,meter_type,allot_type,operator_account) values(#{meter_no},#{meter_type},#{allot_type},#{operator_account})
+    </insert>
+    <!-- 删除母表配置信息 -->
+    <update id="removeParentConf" parameterType="String">
+        delete from mother_meter_conf
+        where meter_no = #{meterNo}
+    </update>
+    <!-- 查询私有母表下面是否有正常的子表-->
+    <select id="countCommMeter"  parameterType="String" resultType="int">
+        select  count(meter_no) from meter_user where  submeter_no=#{meter_no} and meter_status in ('1','0') and meter_no != #{meter_no}
+    </select>
+
+    <!-- 根据表号查询出母表配置信息-->
+    <select id="qryMotherConfInfo"  parameterType="String" resultType="com.joymeter.entity.ParentMeterConf">
+        select * from mother_meter_conf where meter_no = #{meterNo};
+    </select>
+    <!-- 查询出母表下正常使用的子表-->
+    <select id="qrySubMeter"  parameterType="map" resultType="com.joymeter.entity.User">
+        select  * from meter_user where      
+        <choose>
+            <when test="type == 0">
+                concentrator_name=#{concentrator_name} and submeter_no!=meter_no           
+            </when>
+            <otherwise>
+                submeter_no=#{meter_no} and meter_no != #{meter_no}
+            </otherwise>
+        </choose>
+        and meter_status in ('1','0')
+    </select>
+    <!-- 将公摊扣费的数据存入表中-->
+    <insert id="setDeductionFee" parameterType="com.joymeter.entity.PubReductionFee">
+        insert into pub_deduction_fee
+        (pef_bussinessNum,pef_meterNo,pef_userName,pef_belongPar, pef_parType,pef_allotType, pef_applyTime, pef_shareRadio,pef_shareSize,
+        pef_shareFee,pef_refund,pef_Total,pef_community,pef_buildNo,pef_unitNo,pef_roomNo,pef_rateType,pef_accountBalance)
+        values(#{pef_bussinessNum},#{pef_meterNo},#{pef_userName},#{pef_belongPar},#{pef_parType},#{pef_allotType},#{pef_applyTime},#{pef_shareRadio},#{pef_shareSize},
+        #{pef_shareFee},#{pef_refund},#{pef_Total},#{pef_community},#{pef_buildNo},#{pef_unitNo},#{pef_roomNo},#{pef_rateType},#{pef_accountBalance})
+    </insert>
+    <!--查询公摊扣费详细信息 -->
+    <select id="getDeductionFee" parameterType="map" resultType="com.joymeter.entity.PubReductionFee">
+        select * from pub_deduction_fee
+        <trim prefix="where" prefixOverrides="and">
+            <if test="pef_userName!=''">pef_userName like concat('%',#{pef_userName},'%')</if>
+            <if test="pef_community!=''">and pef_community =#{pef_community}</if>
+            <if test="pef_buildNo!=''">and pef_buildNo =#{pef_buildNo}</if>
+            <if test="pef_unitNo!=''">and pef_unitNo =#{pef_unitNo}</if>
+            <if test="pef_roomNo!=''">and pef_roomNo =#{pef_roomNo}</if>
+            <if test="pef_meterNo!=''">and pef_meterNo =#{pef_meterNo}</if>         
+        </trim>
+        order by pef_applyTime desc limit #{startNo},#{pageSize}
+    </select>
+    <!--查询公摊扣费总条数 -->
+    <select id="qryAllShareNo" parameterType="map"   resultType="int">
+        select count(pef_meterNo) from pub_deduction_fee
+        <trim prefix="where" prefixOverrides="and">
+            <if test="pef_userName!=''">pef_userName like concat('%',#{pef_userName},'%')</if>
+            <if test="pef_community!=''">and pef_community =#{pef_community}</if>
+            <if test="pef_buildNo!=''">and pef_buildNo =#{pef_buildNo}</if>
+            <if test="pef_unitNo!=''">and pef_unitNo =#{pef_unitNo}</if>
+            <if test="pef_roomNo!=''">and pef_roomNo =#{pef_roomNo}</if>
+            <if test="pef_meterNo!=''">and pef_meterNo =#{pef_meterNo}</if>         
+        </trim>
+    </select>
+    <update id="updateMeterHouseArea" parameterType="String">
+        update meter_user set house_area='0' where submeter_No=#{meter_no}
+    </update>
+    <!--将公摊扣费剩余的用量存入表中-->
+    <update id="setRemainAmount" parameterType="map">
+        update read_info set data8=#{data8} where operate_id=#{operate_id}
+    </update>
+    <!--查询“本期读数”最大值的记录-->
+    <select id="qryMaxOfThisRead"  parameterType="String" resultType="com.joymeter.entity.ReadInfo">      
+        select * from read_info where meter_no =#{meterNo} and exception='1' and isAutoClear !='10' order by operate_time desc limit 1
+    </select>
+    <!--查询子表最大的均摊量-->
+    <select id="qryMaxOfaverageCount"  parameterType="String" resultType="Double">
+        select  max(data8)  from (
+        select data8 from read_info where meter_no =#{meterNo} and exception='1' and isAutoClear!= '10'  order by operate_time limit 10) 
+        as read_temp
+    </select>
+    <select id="qryLatestReadInfos"  parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select  
+        info_id,operate_id, user_name,user_address, user_address_area, user_address_community,community_no,
+        user_address_building,user_address_unit,user_address_room,contact_info, concentrator_name, meter_no,
+        fee_type,this_read,last_read, this_cost,last_cost,fee_need, balance,exception,fee_status,read_type,
+        pay_remind, operator_account,operate_time,operate_day,operate_dayTime,meter_type,data2, data3,
+        data4,data5, data6,data7,data8,data9, isAutoClear, community_no from 
+        read_info where meter_no in
+        (
+        select meter_no from meter_user where submeter_no =#{meter_no} and submeter_no !=meter_no
+        )
+        and  operate_time >#{sendTime}
+    </select>
+    <select id="qrysubLatestReadInfos"  parameterType="map" resultType="com.joymeter.entity.ReadInfo">
+        select  
+        info_id,operate_id, user_name,user_address, user_address_area, user_address_community,community_no,
+        user_address_building,user_address_unit,user_address_room,contact_info, concentrator_name, meter_no,
+        fee_type,this_read,last_read, this_cost,last_cost,fee_need, balance,exception,fee_status,read_type,
+        pay_remind, operator_account,operate_time, operate_day,operate_dayTime,meter_type,data2, data3,
+        data4,data5, data6,data7,data8,data9, isAutoClear, community_no from  read_info 
+        where meter_no in (
+        select meter_no from meter_user where submeter_no in (
+        select submeter_no from meter_user where meter_no = #{meter_no}
+        ))
+        and operate_time >#{sendTime}
+    </select>
+    
+    <!-- 更新设备状态 -->
+    <update id="updateUserMeterStatus" parameterType="map">
+        update meter_user set meter_status = #{meter_status} where meter_no = #{meter_no}
+    </update>
+    
+    <!-- 添加在线离线事件 -->
+    <insert id="addEvent" parameterType="com.joymeter.entity.EventRecord">
+        insert into event_record(meter_no,event,error_code,error_msg,report_time,
+        province,city,district,address,read_state,operator_id) 
+        values(#{meter_no},#{event},#{error_code},#{error_msg},#{report_time},
+        #{province},#{city},#{district},#{address},0,#{operator_id})
+    </insert>
+    <select id="getMeterByUserName" parameterType="string" resultType="com.joymeter.entity.User">
+        select * from meter_user where user_name = #{user_name}
+    </select>
+    <select id="getMeterByUUID" parameterType="string" resultType="com.joymeter.entity.User">
+        select * from meter_user where user_address_original_room = #{uuid} and meter_status in(0,1)
+    </select>
+    <!-- 查询表相关事件-->
+    <select id="getEventInfo" parameterType="map" resultType="com.joymeter.entity.EventRecord">
+        select * from event_record where meter_no = #{meter_no} and error_code = #{error_code} order by report_time desc limit 1
+    </select>
+    
+    <!-- 通过uuid查询该uuid对应的表号 -->
+    <select id="findMeterByUUID" parameterType="string" resultType="string">
+        select meter_no from meter_user where user_address_original_room=#{uuid} and meter_status in(0,1)
+    </select>
+
+    <!-- 更新母表号码 -->
+    <update id="updateMotherMeterNo" parameterType="map">
+        update mother_meter_conf set 
+        meter_no = #{new_meter_no}
+        where meter_no = #{meter_no}
+    </update>
+    
+    <!-- 更新母表时更新所有关联子表的submeter_no字段 -->
+    <update id="updateMeterUserSubmeterNo" parameterType="map">
+        update meter_user set submeter_no = #{new_meter_no} where meter_no = #{meter_no}  
+    </update>
+    
+    <!-- 获取电表操作：开关阀、抄表-->
+    <select id="getEleOperations" parameterType="map" resultType="com.joymeter.entity.EventRecord">
+        select * from event_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_no!=''">meter_no =#{meter_no}</if>
+            <if test="start_time!=''and start_time != null">and report_time &gt;= #{start_time}</if>  
+            <if test="end_time!=''and end_time !=null">and report_time &lt;= #{end_time}</if>  
+        </trim>
+        and error_code in('0000','3001','3000') order by report_time desc limit #{pageSize}
+    </select>
+    
+    <!-- 获取电表异常记录：电压低、离线-->
+    <select id="getEleExceptions" parameterType="map" resultType="com.joymeter.entity.EventRecord">
+        select * from event_record
+        <trim prefix="where" prefixOverrides="and">
+            <if test="meter_no!=''">meter_no =#{meter_no}</if>
+            <if test="start_time!=''and start_time != null">and report_time &gt;= #{start_time}</if>  
+            <if test="end_time!=''and end_time !=null">and report_time &lt;= #{end_time}</if>  
+        </trim>
+        and error_code in('1003','1004') order by report_time desc limit #{pageSize}
+    </select>
+    
+    <!-- 充值管理:根据operateId查询出信息 -->
+    <select id="findOperateInfoByOperateId" resultType="com.joymeter.entity.OperateInfo" parameterType="string">
+        select * from operate_info where operate_id =#{operate_id}
+    </select>
+    
+    <update id="updateRoleByAccount" parameterType="com.joymeter.entity.Admin">
+        update meter_admin set admin_power=#{admin_power},role_id=#{role_id} where admin_account=#{admin_account}
+    </update>
+    
+    <!-- 通过房源id查询表号 -->
+    <select id="findMeterNoByOnline_synv_code" parameterType="string" resultType="string">
+        select meter_no from meter_user where online_synv_code = #{online_synv_code}
+    </select>
+        
+        <!-- 根据表号加载操作信息 -->
+    <select id="loadOperationMethod" resultType="String">
+        select distinct operate_type from operate_info
+    </select>
+</mapper>
