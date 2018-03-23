@@ -26,33 +26,37 @@ import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import org.apache.commons.codec.binary.Base64;
 
-
+/**
+ *
+ * @author zhongfuqiang
+ */
 public class RSACoder {
 
-    public static final String KEY_ALGORITHM = "RSA";//密钥算法
-    public static final String SIGNATURE_ALGORITHM = "MD5withRSA";//签名算法
+    public static final String KEY_ALGORITHM = "RSA";
+    public static final String SIGNATURE_ALGORITHM = "MD5withRSA";
 
-    private static final String PUBLIC_KEY = "RSAPublicKey";//公钥
-    private static final String PRIVATE_KEY = "RSAPrivateKey";//私钥
+    private static final String PUBLIC_KEY = "RSAPublicKey";
+    private static final String PRIVATE_KEY = "RSAPrivateKey";
 
     /**
      * 用私钥对信息生成数字签名
      *
      * @param data 加密数据
      * @param privateKey 私钥
+     *
      * @return
      * @throws Exception
      */
     public static String sign(byte[] data, String privateKey) throws Exception {
-        // 解密由base64编码的私钥
+        // 解密由base64编码的私钥     
         byte[] keyBytes = decryptBASE64(privateKey);
-        // 构造PKCS8EncodedKeySpec对象
+        // 构造PKCS8EncodedKeySpec对象     
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
-        // KEY_ALGORITHM 指定的加密算法
+        // KEY_ALGORITHM 指定的加密算法     
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        // 取私钥匙对象
+        // 取私钥匙对象     
         PrivateKey priKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        // 用私钥对信息生成数字签名
+        // 用私钥对信息生成数字签名     
         Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
         signature.initSign(priKey);
         signature.update(data);
@@ -61,26 +65,28 @@ public class RSACoder {
 
     /**
      * 校验数字签名
-     * @param data  加密数据
+     *
+     * @param data 加密数据
      * @param publicKey 公钥
      * @param sign 数字签名
+     *
      * @return 校验成功返回true 失败返回false
      * @throws Exception
      *
      */
     public static boolean verify(byte[] data, String publicKey, String sign) throws Exception {
-        // 解密由base64编码的公钥
+        // 解密由base64编码的公钥     
         byte[] keyBytes = decryptBASE64(publicKey);
-        // 构造X509EncodedKeySpec对象
+        // 构造X509EncodedKeySpec对象     
         X509EncodedKeySpec keySpec = new X509EncodedKeySpec(keyBytes);
-        // KEY_ALGORITHM 指定的加密算法
+        // KEY_ALGORITHM 指定的加密算法     
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
-        // 取公钥匙对象
+        // 取公钥匙对象     
         PublicKey pubKey = keyFactory.generatePublic(keySpec);
         Signature signature = Signature.getInstance(SIGNATURE_ALGORITHM);
         signature.initVerify(pubKey);
         signature.update(data);
-        // 验证签名是否正常
+        // 验证签名是否正常     
         return signature.verify(decryptBASE64(sign));
     }
 
@@ -94,13 +100,13 @@ public class RSACoder {
      * @throws Exception
      */
     public static byte[] decryptByPrivateKey(byte[] data, String key) throws Exception {
-        // 对密钥解密
+        // 对密钥解密     
         byte[] keyBytes = decryptBASE64(key);
-        // 取得私钥
+        // 取得私钥     
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        // 对数据解密
+        // 对数据解密     
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
         cipher.init(Cipher.DECRYPT_MODE, privateKey);
         return cipher.doFinal(data);
@@ -108,7 +114,7 @@ public class RSACoder {
 
     /**
      * 解密<br>
-     * 用公钥解密
+     * 用私钥解密
      *
      * @param data
      * @param key
@@ -116,13 +122,13 @@ public class RSACoder {
      * @throws Exception
      */
     public static byte[] decryptByPublicKey(byte[] data, String key) throws Exception {
-        // 对密钥解密
+        // 对密钥解密     
         byte[] keyBytes = decryptBASE64(key);
-        // 取得公钥
+        // 取得公钥     
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key publicKey = keyFactory.generatePublic(x509KeySpec);
-        // 对数据解密
+        // 对数据解密     
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
         cipher.init(Cipher.DECRYPT_MODE, publicKey);
         return cipher.doFinal(data);
@@ -138,13 +144,13 @@ public class RSACoder {
      * @throws Exception
      */
     public static byte[] encryptByPublicKey(byte[] data, String key) throws Exception {
-        // 对公钥解密
+        // 对公钥解密     
         byte[] keyBytes = decryptBASE64(key);
-        // 取得公钥
+        // 取得公钥     
         X509EncodedKeySpec x509KeySpec = new X509EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key publicKey = keyFactory.generatePublic(x509KeySpec);
-        // 对数据加密
+        // 对数据加密     
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
         return cipher.doFinal(data);
@@ -160,13 +166,13 @@ public class RSACoder {
      * @throws Exception
      */
     public static byte[] encryptByPrivateKey(byte[] data, String key) throws Exception {
-        // 对密钥解密
+        // 对密钥解密     
         byte[] keyBytes = decryptBASE64(key);
-        // 取得私钥
+        // 取得私钥     
         PKCS8EncodedKeySpec pkcs8KeySpec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory keyFactory = KeyFactory.getInstance(KEY_ALGORITHM);
         Key privateKey = keyFactory.generatePrivate(pkcs8KeySpec);
-        // 对数据加密
+        // 对数据加密     
         Cipher cipher = Cipher.getInstance(keyFactory.getAlgorithm());
         cipher.init(Cipher.ENCRYPT_MODE, privateKey);
         return cipher.doFinal(data);
@@ -206,7 +212,7 @@ public class RSACoder {
         KeyPairGenerator keyPairGen = KeyPairGenerator.getInstance(KEY_ALGORITHM);
         keyPairGen.initialize(512);
         KeyPair keyPair = keyPairGen.generateKeyPair();
-        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();// 公钥
+        RSAPublicKey publicKey = (RSAPublicKey) keyPair.getPublic();// 公钥  
         RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();// 私钥
         Map<String, Object> keyMap = new HashMap<>(2);
         keyMap.put(PUBLIC_KEY, publicKey);
@@ -243,14 +249,15 @@ public class RSACoder {
     public static String getRSAPrivateKeyAsNetFormat(byte[] encodedPublicKey) {
         try {
             StringBuilder buff = new StringBuilder(1024);
-            // Only RSAPublicKeySpec and X509EncodedKeySpec supported for RSA public keys
+            // Only RSAPublicKeySpec and X509EncodedKeySpec supported for RSA public keys  
             KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-            RSAPublicKey pukKey = (RSAPublicKey) keyFactory.generatePublic(new X509EncodedKeySpec(encodedPublicKey));
+            RSAPublicKey pukKey = (RSAPublicKey) keyFactory
+                    .generatePublic(new X509EncodedKeySpec(encodedPublicKey));
             buff.append("<RSAKeyValue>");
-            buff.append("<Modulus>").append(encryptBASE64(removeMSZero(pukKey.getModulus().toByteArray())))
-                    .append("</Modulus>");
-            buff.append("<Exponent>").append(encryptBASE64(removeMSZero(pukKey.getPublicExponent().toByteArray())))
-                    .append("</Exponent>");
+            buff.append("<Modulus>").append(encryptBASE64(removeMSZero(pukKey.getModulus()
+                    .toByteArray()))).append("</Modulus>");
+            buff.append("<Exponent>").append(encryptBASE64(removeMSZero(pukKey.getPublicExponent()
+                    .toByteArray()))).append("</Exponent>");
             buff.append("</RSAKeyValue>");
             return buff.toString();
         } catch (NoSuchAlgorithmException | InvalidKeySpecException ex) {
@@ -284,8 +291,7 @@ public class RSACoder {
     public static String getAccess_token() {
         try {
             String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQeFrVhmHoWYNwPkXFVScpdwsZ/BnVhsUuGGvozfgcyde6Q7nFaTmvNBGuxbSqsSmatQLKEZWkPDDzP/Yv7zPcCAwEAAQ==";
-            String inputStr = String.format("{'client_id':'joy000001','datetime':'%s'}",
-                    new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()));
+            String inputStr = String.format("{'client_id':'joy000001','datetime':'%s'}", new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()));
             System.err.println("加密前: " + inputStr);
             byte[] data = inputStr.getBytes();
             byte[] encodedData;
@@ -306,8 +312,7 @@ public class RSACoder {
      */
     public static void main(String[] args) throws Exception {
         String publicKey = "MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAJQeFrVhmHoWYNwPkXFVScpdwsZ/BnVhsUuGGvozfgcyde6Q7nFaTmvNBGuxbSqsSmatQLKEZWkPDDzP/Yv7zPcCAwEAAQ==";
-        String inputStr = String.format("{'client_id':'joy000001','datetime':'%s'}",
-                new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()));
+        String inputStr = String.format("{'client_id':'joy000001','datetime':'%s'}", new SimpleDateFormat("yyyyMMddHHmmss").format(System.currentTimeMillis()));
         System.err.println("加密前: " + inputStr);
         byte[] data = inputStr.getBytes();
         byte[] encodedData = RSACoder.encryptByPublicKey(data, publicKey);

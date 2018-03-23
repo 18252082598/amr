@@ -39,7 +39,7 @@ public class Util {
      * @return
      */
     public static List<String> traverseFolder(String path) {
-        List<String> fileNames = new ArrayList<String>();
+        List<String> fileNames = new ArrayList();
         File file = new File(path);
         if (file.exists()) {
             File[] files = file.listFiles();

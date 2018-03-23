@@ -4,15 +4,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class FileUtil {
-    
-    public static final String REALNAME = "realName";//实名
-    public static final String STORENAME = "storeName";//仓库名
-    public static final String SIZE = "size";
-    public static final String SUFFIX = "suffix";//后缀
-    public static final String CONTENTTYPE = "contentType";//内容类型
-    public static final String CREATETIME = "createTime";//创建时间
-    public static final String UPLOADDIR = "uploadDir/";//上传目录
 
+    public static final String REALNAME = "realName";
+    public static final String STORENAME = "storeName";
+    public static final String SIZE = "size";
+    public static final String SUFFIX = "suffix";
+    public static final String CONTENTTYPE = "contentType";
+    public static final String CREATETIME = "createTime";
+    public static final String UPLOADDIR = "uploadDir/";
 
     /**
      * @param name

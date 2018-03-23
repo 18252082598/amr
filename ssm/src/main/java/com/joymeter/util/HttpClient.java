@@ -28,7 +28,10 @@ import org.apache.http.util.EntityUtils;
  */
 public class HttpClient {
 
-    private static final RequestConfig REQ_CONFIG = RequestConfig.custom().setSocketTimeout(10000).setConnectTimeout(10000).build();
+    private static final RequestConfig REQ_CONFIG = RequestConfig.custom()
+            .setSocketTimeout(10000)
+            .setConnectTimeout(10000)
+            .build();
 
     /**
      * 检测Url的合法性

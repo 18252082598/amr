@@ -1,5 +1,13 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.joymeter.task;
 
+import com.joymeter.dao.UserDao;
+import com.joymeter.service.SaaSService;
+import com.joymeter.service.CallBackService;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -9,16 +17,16 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import com.joymeter.dao.UserDao;
-import com.joymeter.service.CallBackService;
-import com.joymeter.service.SaaSService;
-
+/**
+ *
+ * @author zhongfuqiang
+ * @version 1.0.0
+ */
 public class JoyServletContextListener implements ServletContextListener {
-    
+
     public static int Port = 8080;
     public static String Root = "amr";
     private static CallBackService callbackService = null;
@@ -26,8 +34,10 @@ public class JoyServletContextListener implements ServletContextListener {
     private static final String CLASSPATH = JoyServletContextListener.class.getResource("/").getPath();
     public static  String mode = "Plus"; 
 
-    
-    //初始化
+    /**
+     *
+     * @param sce
+     */
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         try {
@@ -44,16 +54,17 @@ public class JoyServletContextListener implements ServletContextListener {
         } catch (IOException ex) {
             Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
     }
-    
 
     @Override
-    public void contextDestroyed(ServletContextEvent arg0) {
-        // TODO Auto-generated method stub
-        
+    public void contextDestroyed(ServletContextEvent sce) {
+        //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
+    /**
+     *
+     * @return
+     */
     public static String GetUrl() {
         return String.format("http://%s:%s/%s/user/receive.do",
                 "127.0.0.1",
@@ -104,91 +115,87 @@ public class JoyServletContextListener implements ServletContextListener {
         return JoyServletContextListener.callbackService;
     }
 
+    /**
+     *
+     * @param userDao
+     * @return
+     */
+    public static SaaSService instanceSaaS(UserDao userDao) {
+        InputStream inputStream = null;
+        if (JoyServletContextListener.saasService == null) {
+            try {
+                StringBuilder fileName = new StringBuilder(CLASSPATH);
+                fileName.append("saas.properties");
+                inputStream = new FileInputStream(fileName.toString());
+                Properties prop = new Properties();
+                prop.load(inputStream);
+                Map<String, String> params = new HashMap<>();
+                prop.entrySet().stream().forEach(entry -> {
+                    params.put((String) entry.getKey(), (String) entry.getValue());
+                });
+                String package_name = prop.getProperty("package_name", null);
+                if (package_name == null || package_name.isEmpty()) {
+                    package_name = "com.joymeter.service.saasImp.SaaSServiceImp";
+                }
+                Class cls = Class.forName(package_name);
+                JoyServletContextListener.saasService = (SaaSService) cls.newInstance();
+                JoyServletContextListener.saasService.setParams(userDao, params);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return JoyServletContextListener.saasService;
+    }
     
     /**
-    *
-    * @param userDao
-    * @return
-    */
-   public static SaaSService instanceSaaS(UserDao userDao) {
-       InputStream inputStream = null;
-       if (JoyServletContextListener.saasService == null) {
-           try {
-               StringBuilder fileName = new StringBuilder(CLASSPATH);
-               fileName.append("saas.properties");
-               inputStream = new FileInputStream(fileName.toString());
-               Properties prop = new Properties();
-               prop.load(inputStream);
-               Map<String, String> params = new HashMap<>();
-               prop.entrySet().stream().forEach(entry -> {
-                   params.put((String) entry.getKey(), (String) entry.getValue());
-               });
-               String package_name = prop.getProperty("package_name", null);
-               if (package_name == null || package_name.isEmpty()) {
-                   package_name = "com.joymeter.service.saasImp.SaaSServiceImp";
-               }
-               Class cls = Class.forName(package_name);
-               JoyServletContextListener.saasService = (SaaSService) cls.newInstance();
-               JoyServletContextListener.saasService.setParams(userDao, params);
-           } catch (FileNotFoundException ex) {
-               Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-               Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
-           } finally {
-               try {
-                   if (inputStream != null) {
-                       inputStream.close();
-                   }
-               } catch (IOException ex) {
-                   Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
-               }
-           }
-       }
-       return JoyServletContextListener.saasService;
-   }
-   
-   /**
-    *
-    * @param userDao
-    * @return
-    */
-   public static SaaSService instancePayment(UserDao userDao) {
-       InputStream inputStream = null;
-       if (JoyServletContextListener.saasService == null) {
-           try {
-               StringBuilder fileName = new StringBuilder(CLASSPATH);
-               fileName.append("payment.properties");
-               inputStream = new FileInputStream(fileName.toString());
-               Properties prop = new Properties();
-               prop.load(inputStream);
-               Map<String, String> params = new HashMap<>();
-               prop.entrySet().stream().forEach(entry -> {
-                   params.put((String) entry.getKey(), (String) entry.getValue());
-               });
-               String package_name = prop.getProperty("package_name", null);
-               if (package_name == null || package_name.isEmpty()) {
-                   package_name = "com.joymeter.service.saasImp.SaaSServiceImp";
-               }
-               Class cls = Class.forName(package_name);
-               JoyServletContextListener.saasService = (SaaSService) cls.newInstance();
-               JoyServletContextListener.saasService.setParams(userDao, params);
-           } catch (FileNotFoundException ex) {
-               Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
-           } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-               Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
-           } finally {
-               try {
-                   if (inputStream != null) {
-                       inputStream.close();
-                   }
-               } catch (IOException ex) {
-                   Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
-               }
-           }
-       }
-       return JoyServletContextListener.saasService;
-   }
-  
-
-    
+     *
+     * @param userDao
+     * @return
+     */
+    public static SaaSService instancePayment(UserDao userDao) {
+        InputStream inputStream = null;
+        if (JoyServletContextListener.saasService == null) {
+            try {
+                StringBuilder fileName = new StringBuilder(CLASSPATH);
+                fileName.append("payment.properties");
+                inputStream = new FileInputStream(fileName.toString());
+                Properties prop = new Properties();
+                prop.load(inputStream);
+                Map<String, String> params = new HashMap<>();
+                prop.entrySet().stream().forEach(entry -> {
+                    params.put((String) entry.getKey(), (String) entry.getValue());
+                });
+                String package_name = prop.getProperty("package_name", null);
+                if (package_name == null || package_name.isEmpty()) {
+                    package_name = "com.joymeter.service.saasImp.SaaSServiceImp";
+                }
+                Class cls = Class.forName(package_name);
+                JoyServletContextListener.saasService = (SaaSService) cls.newInstance();
+                JoyServletContextListener.saasService.setParams(userDao, params);
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException | ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
+                Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
+            } finally {
+                try {
+                    if (inputStream != null) {
+                        inputStream.close();
+                    }
+                } catch (IOException ex) {
+                    Logger.getLogger(JoyServletContextListener.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
+        return JoyServletContextListener.saasService;
+    }
 }

@@ -1,20 +1,28 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package com.joymeter.util;
-
-import java.security.Key;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.spec.SecretKeySpec;
+import java.security.Key;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
+/**
+ * 
+ * @author yinhf
+ */
 public class DESEncrypt {
-    
+
     private static String strDefaultKey = "";
     private Cipher encryptCipher = null;
     private Cipher decryptCipher = null;
-    
+
     /**
      * 将byte数组转换为表示16进制值的字符串， 如：byte[]{8,18}转换为：0813， 和public static byte[]
      * hexStr2ByteArr(String strIn) 互为可逆的转换过程
@@ -41,7 +49,7 @@ public class DESEncrypt {
         }
         return sb.toString();
     }
-    
+
     /**
      * 将表示16进制值的字符串转换为byte数组， 和public static String byteArr2HexStr(byte[] arrB)
      * 互为可逆的转换过程
@@ -62,6 +70,7 @@ public class DESEncrypt {
         }
         return arrOut;
     }
+
     /**
      * 默认构造方法，使用默认密钥
      *
@@ -70,6 +79,7 @@ public class DESEncrypt {
     public DESEncrypt() throws Exception {
         this(strDefaultKey);
     }
+
     /**
      * 指定密钥构造方法
      *
@@ -90,8 +100,6 @@ public class DESEncrypt {
         }
     }
 
-    
-    
     /**
      * 加密字节数组
      *
@@ -162,16 +170,14 @@ public class DESEncrypt {
 
     public static void main(String[] args) throws Exception {
         String key = "11111111";
-        String str = "你好";
+        String str = "123456";
         System.out.println("key:" + key);
         DESEncrypt desPlus2 = new DESEncrypt(key);
         String e2 = desPlus2.encrypt(str);
         System.out.println("密文:" + e2);
 
-        String d2 = desPlus2.decrypt("58C83F966842dc40");
-        System.out.println("原文:" + d2);
+//		String d2 = desPlus2.decrypt("58C83F966842dc40");
+//		System.out.println("原文:" + d2);
     }
-
-
 
 }

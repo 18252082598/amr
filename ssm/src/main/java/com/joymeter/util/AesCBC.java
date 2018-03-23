@@ -1,14 +1,13 @@
+/*
+ */
 package com.joymeter.util;
-
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.IvParameterSpec;
 import javax.crypto.spec.SecretKeySpec;
-
 import org.apache.commons.codec.binary.Base64;
 /**
  * AES-128-CBC加密模式
@@ -99,5 +98,4 @@ public class AesCBC {
         String decrypt =  as.decrypt(after, "utf-8");
         System.out.println("解密数据: " + decrypt);
     }
-    
 }

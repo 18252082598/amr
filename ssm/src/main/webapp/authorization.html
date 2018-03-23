@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head lang="en">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>CJoy授权页面</title>
+        <link type="image/x-icon" href="../favicon.ico" rel="shortcut icon">	
+        <link href="css/bootstrap.min.css" rel="stylesheet">
+        <link href="css/ejoy.css" rel="stylesheet">
+        <script src="js/jquery-2.1.1.min.js"></script>
+        <script src="js/bootstrap.min.js"></script>
+        <!--[if lt IE 9]>
+            <script src="//cdn.bootcss.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+            <script src="//cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+            <![endif]-->
+        <script src="js/cookie_util.js"></script>
+        <script src="js/authorization.js"></script>
+    </head>
+    <body>
+        <div id="dlbox">
+            <div class="dl_img center-block">
+                <img src="images//all/u14.png" alt="" />
+            </div>
+            <div class="container" id="dluk">
+                <form class="form-horizontal  dl_form">
+                    <div class="form-group ">
+                        <input class="form-control" type="text" id="formGroupInputLarge"
+                               placeholder="请输入您的账号" onfocus="hideAccountErrorMess()" onblur="showAccountErrorMess()">
+                        <label id="account_msg" class="control-label  tstext"
+                               for="formGroupInputLarge"></label>
+                    </div>
+                    <div class="form-group ">
+                        <input class="form-control" type="password"
+                               id="formGroupInputSmall" placeholder="请输入您的密码" onfocus="hidePasswordErrorMess()"
+                               onblur="showPasswordErrorMess()">
+                        <label id="pwd_msg" class="control-label tstext"
+                               for="formGroupInputSmall"></label>
+                    </div>                  
+                    <div style="margin:10px auto;  margin-left:20px;"   >
+                        <button id="login" type="button"  class="btn  btn-success" style="width:105px" value="确定">确定</button>
+                        &nbsp;
+                        <button id="reset" type="button"  class="btn  btn-success" style="width:105px" value="重置">重置</button>
+                    </div>
+                    <p>
+                        <label style="color: red">*</label>&nbsp;蘑菇租房将获取充值管理、抄表管理、费率管理权限
+                    </p>
+                </form>
+                <div class="footer">
+                    <p>
+                        © Copyright 2015 - 2018 杭州超仪信息技术有限公司
+                    </p>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>

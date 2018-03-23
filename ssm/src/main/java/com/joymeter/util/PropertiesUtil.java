@@ -15,14 +15,16 @@
  */
 package com.joymeter.util;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+
 import java.io.IOException;
 import java.util.Properties;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 
 public class PropertiesUtil {
 
+    private static final Log LOG = LogFactory.getLog(PropertiesUtil.class);
 
     /**
      * 通过静态代码块读取上传文件的验证格式配置文件,静态代码块只执行一次(单例)
@@ -33,7 +35,7 @@ public class PropertiesUtil {
 
     }
     /**
-     * 函数功能说明 ：读取配置项 
+     * 函数功能说明 ：读取配置项 Administrator 2012-12-14 修改者名字 ： 修改日期 ： 修改内容 ：
      *
      * @参数：
      * @return void
@@ -47,7 +49,7 @@ public class PropertiesUtil {
             properties.load(PropertiesUtil.class.getClassLoader()
                     .getResourceAsStream(fileName));
         } catch (IOException e) {
-            Logger.getLogger(PropertiesUtil.class.getName()).log(Level.SEVERE, null, e);
+            LOG.error(e);
         }
         
         return (String) properties.get(key);
